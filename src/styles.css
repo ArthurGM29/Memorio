@@ -1,0 +1,478 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&family=Dancing+Script:wght@600;700&display=swap");
+
+/* --- VARIÁVEIS DE TEMA --- */
+:root {
+  /* PADRÃO: CLASSIC WINE */
+  --bg-body: #f4f1ea; /* Papel levemente texturizado/creme */
+  --bg-glass: rgba(255, 255, 255, 0.95);
+  --border-glass: rgba(128, 0, 32, 0.1);
+
+  --text-main: #2b1d1d;
+  --text-muted: #8c7b7b;
+
+  --primary: #800020; /* Vinho */
+  --primary-hover: #5c0017;
+  --secondary: #d4af37; /* Dourado */
+
+  --danger: #c0392b;
+  --shadow: 0 10px 30px rgba(128, 0, 32, 0.08);
+  --input-bg: #fff;
+  --radius: 12px;
+
+  --bg-gradient: radial-gradient(
+    circle at 50% 50%,
+    rgba(128, 0, 32, 0.03) 0%,
+    transparent 60%
+  );
+}
+
+/* TEMA: SWEET */
+[data-theme="sweet"] {
+  --bg-body: #fff0f5;
+  --bg-glass: rgba(255, 255, 255, 0.9);
+  --border-glass: rgba(255, 105, 180, 0.2);
+  --text-main: #5c4b51;
+  --text-muted: #9e8c92;
+  --primary: #ff69b4;
+  --primary-hover: #db4c93;
+  --secondary: #ffb7c5;
+  --bg-gradient: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
+}
+
+/* TEMA: DARK */
+[data-theme="dark"] {
+  --bg-body: #121212;
+  --bg-glass: rgba(30, 30, 30, 0.85);
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --text-main: #e0e0e0;
+  --text-muted: #cec7c7;
+  --primary: #c0234b; /* Dourado Ouro no escuro */
+  --primary-hover: #b62b4d;
+  --secondary: #333;
+  --input-bg: #1e1e1e;
+  --shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+  --bg-gradient: radial-gradient(
+    circle at 50% 0%,
+    rgba(207, 181, 59, 0.1) 0%,
+    transparent 60%
+  );
+}
+
+/* --- RESET --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: "Lato", sans-serif;
+  background-color: var(--bg-body);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--text-main);
+  transition: all 0.5s ease;
+  min-height: 100vh;
+}
+h1,
+h2,
+h3 {
+  font-family: "Cinzel", serif;
+  color: var(--primary);
+}
+
+/* --- UTILITÁRIOS --- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.fade-in {
+  animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- COMPONENTES GERAIS --- */
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+}
+
+/* Inputs & Buttons */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-glass);
+  background: var(--input-bg);
+  color: var(--text-main);
+  font-family: inherit;
+}
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: 0.3s;
+}
+.btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.btn-icon {
+  background: transparent;
+  border: 1px solid var(--border-glass);
+  color: var(--text-muted);
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-icon:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* --- MEMORY CARD: ESTILO POLAROID --- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 3rem;
+  padding: 2rem 0 4rem 0;
+}
+
+.memory-card {
+  background: #fff; /* Sempre branco para parecer papel foto */
+  padding: 12px 12px 50px 12px; /* Margem inferior grande para escrita */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  cursor: pointer;
+  border-radius: 2px; /* Cantos quase retos */
+  z-index: 1;
+}
+
+/* No tema escuro, o polaroid pode ser levemente cinza ou manter branco para contraste */
+[data-theme="dark"] .memory-card {
+  background: #f0f0f0;
+  color: #222;
+}
+
+.memory-card:hover {
+  transform: scale(1.05) rotate(0deg) !important; /* Fica reto e flutua */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  z-index: 10;
+}
+
+.card-media {
+  width: 100%;
+  aspect-ratio: 1/1; /* Quadrado Perfeito */
+  object-fit: cover;
+  border: 1px solid #eee;
+  background: #eee;
+  margin-bottom: 10px;
+  filter: sepia(15%); /* Filtro Vintage */
+  transition: filter 0.3s;
+}
+.memory-card:hover .card-media {
+  filter: sepia(0%);
+}
+
+.card-content {
+  position: absolute;
+  bottom: 5px;
+  left: 15px;
+  right: 15px;
+  text-align: center;
+}
+
+.card-title {
+  font-family: "Dancing Script", cursive; /* Fonte Manuscrita */
+  font-size: 1.8rem;
+  color: #2b1d1d;
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-date {
+  font-size: 0.75rem;
+  color: #888;
+  font-family: "Lato", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* --- FLASHBACK WIDGET (NESTE DIA) --- */
+.flashback-widget {
+  background: linear-gradient(135deg, var(--bg-glass), #fff);
+  border: 1px solid var(--secondary);
+  padding: 1.5rem;
+  margin-bottom: 3rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15);
+}
+.flashback-content {
+  flex: 1;
+}
+.flashback-badge {
+  background: var(--secondary);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+/* --- SETTINGS & AUTH (Mantidos e ajustados) --- */
+.settings-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 220px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(15px);
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+  padding: 0.5rem;
+  box-shadow: var(--shadow);
+}
+.menu-item {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  transition: 0.2s;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.menu-item:hover {
+  background: rgba(128, 0, 32, 0.05);
+  color: var(--primary);
+}
+
+/* --- RESPONSIVO --- */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    padding: 0 2rem;
+  }
+  .memory-card {
+    transform: none !important;
+    margin-bottom: 2rem;
+  }
+}
+/* --- LOGIN ESTILO INSTAGRAM (MEMORIO) --- */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fafafa; /* Fundo padrão do Instagram */
+  padding: 20px;
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 935px; /* Largura padrão do container do Instagram */
+  gap: 32px;
+}
+
+/* Lado Esquerdo: Visual (Slideshow) */
+.auth-visuals {
+  display: none; /* Escondido no mobile */
+  flex: 1;
+  height: 580px;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.visual-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.visual-slide.active {
+  opacity: 1;
+}
+
+/* Lado Direito: Formulários */
+.auth-content {
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.insta-box {
+  background: #ffffff;
+  border: 1px solid #dbdbdb; /* Borda clássica do Insta */
+  padding: 2.5rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.insta-logo {
+  font-family: "Dancing Script", cursive;
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  color: var(--primary); /* Vinho do seu tema */
+}
+
+/* Inputs estilo Insta */
+.insta-input-group {
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.insta-input {
+  width: 100%;
+  background: #fafafa;
+  border: 1px solid #dbdbdb;
+  border-radius: 3px; /* Cantos pouco arredondados */
+  padding: 9px 8px 7px;
+  font-size: 12px;
+  color: #262626;
+  outline: none;
+}
+
+.insta-input:focus {
+  border: 1px solid #a8a8a8;
+}
+
+.insta-input::placeholder {
+  color: #8e8e8e;
+}
+
+/* Botão estilo Insta */
+.btn-insta {
+  width: 100%;
+  background-color: var(--primary); /* Vinho */
+  color: #fff;
+  border-radius: 4px;
+  font-weight: 600;
+  padding: 7px 16px;
+  font-size: 14px;
+  margin-top: 15px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-insta:hover {
+  background-color: var(--primary-hover);
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background-color: #dbdbdb;
+}
+
+.or-text {
+  margin: 0 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8e8e8e;
+  text-transform: uppercase;
+}
+
+.forgot-pass {
+  font-size: 12px;
+  color: var(--primary);
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+/* Box Secundário (Cadastre-se) */
+.switch-text {
+  font-size: 14px;
+  margin: 15px 0;
+}
+
+.switch-link {
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Responsivo */
+@media (min-width: 800px) {
+  .auth-visuals {
+    display: block;
+  }
+}
