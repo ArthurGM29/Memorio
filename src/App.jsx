@@ -29,6 +29,17 @@ import {
 } from "lucide-react";
 import "./styles.css";
 
+// --- CONFIGURAÇÃO DAS CORES DOS TEMAS (BOLINHAS) ---
+const THEME_COLORS = {
+  wine: "#800020", // Vinho
+  sweet: "#ffb7c5", // Rosa
+  ocean: "#0077be", // Azul (Novo)
+  forest: "#2e8b57", // Verde (Novo)
+  wood: "#8b4513", // Marrom (Novo)
+  sun: "#f39c12", // Amarelo (Novo)
+  dark: "#333333", // Escuro
+};
+
 // --- TRADUÇÕES ---
 const TRANSLATIONS = {
   pt: {
@@ -66,6 +77,8 @@ const TRANSLATIONS = {
     label_fav: "Favorito ❤️",
     btn_save: "Salvar",
     btn_back: "Voltar",
+    btn_cancel: "Cancelar",
+    btn_delete: "Excluir",
     my_albums: "MEUS ÁLBUNS",
     my_favorites: "MEUS FAVORITOS",
     new_album: "Novo Álbum",
@@ -77,8 +90,20 @@ const TRANSLATIONS = {
     settings_appearance: "Aparência",
     settings_language: "Idioma",
     settings_logout: "Sair",
+    delete_album_title: "Excluir Álbum?",
+    delete_album_confirm:
+      "Tem certeza que deseja excluir este álbum? As memórias não serão apagadas.",
+    delete_memory_title: "Excluir Memória?",
+    delete_memory_confirm:
+      "Essa ação é irreversível. Tem certeza que deseja apagar esta memória?",
+    lbl_cover: "Capa",
+    // Nomes dos Temas
     theme_wine: "Vinho",
     theme_sweet: "Sweet",
+    theme_ocean: "Ocean",
+    theme_forest: "Forest",
+    theme_wood: "Wood",
+    theme_sun: "Sun",
     theme_dark: "Dark",
   },
   en: {
@@ -116,6 +141,8 @@ const TRANSLATIONS = {
     label_fav: "Favorite ❤️",
     btn_save: "Save",
     btn_back: "Back",
+    btn_cancel: "Cancel",
+    btn_delete: "Delete",
     my_albums: "MY ALBUMS",
     my_favorites: "MY FAVORITES",
     new_album: "New Album",
@@ -127,8 +154,19 @@ const TRANSLATIONS = {
     settings_appearance: "Appearance",
     settings_language: "Language",
     settings_logout: "Log out",
+    delete_album_title: "Delete Album?",
+    delete_album_confirm:
+      "Are you sure you want to delete this album? Memories will not be deleted.",
+    delete_memory_title: "Delete Memory?",
+    delete_memory_confirm:
+      "This action is irreversible. Are you sure you want to delete this memory?",
+    lbl_cover: "Cover",
     theme_wine: "Wine",
     theme_sweet: "Sweet",
+    theme_ocean: "Ocean",
+    theme_forest: "Forest",
+    theme_wood: "Wood",
+    theme_sun: "Sun",
     theme_dark: "Dark",
   },
 };
@@ -150,35 +188,24 @@ const INITIAL_MEMORY = {
 
 const INITIAL_ALBUMS = [{ id: "album1", title: "Viagens Brasil", cover: null }];
 
-// --- UTILS ---
+// --- UTILS (TOAST PREMIUM) ---
 const Toast = ({ message, type, onClose }) => {
   useEffect(() => {
     const t = setTimeout(onClose, 3000);
     return () => clearTimeout(t);
   }, [onClose]);
+  const isSuccess = type !== "error";
   return (
-    <div
-      style={{ position: "fixed", top: 20, right: 20, zIndex: 9999 }}
-      className="fade-in"
-    >
+    <div className="toast-container-premium">
       <div
-        className="glass-panel"
-        style={{
-          padding: "15px 25px",
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          background: "#fff",
-          borderLeft: `4px solid ${type === "error" ? "#c0392b" : "#2ecc71"}`,
-          boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
-        }}
+        className={`toast-content-premium ${
+          isSuccess ? "toast-success" : "toast-error"
+        }`}
       >
-        {type === "error" ? (
-          <AlertCircle size={20} color="#c0392b" />
-        ) : (
-          <CheckCircle size={20} color="#2ecc71" />
-        )}
-        <span>{message}</span>
+        <div className="icon-area">
+          {isSuccess ? <CheckCircle size={24} /> : <AlertCircle size={24} />}
+        </div>
+        <span style={{ fontSize: "0.95rem" }}>{message}</span>
       </div>
     </div>
   );
@@ -311,7 +338,7 @@ const LocationSelector = ({ country, state, city, onChange }) => {
   );
 };
 
-// --- AUTH (VISUAL PREMIUM & ELEGANTE) ---
+// --- AUTH (VISUAL PREMIUM) ---
 const Auth = ({ onLogin, t }) => {
   const [isRegister, setIsRegister] = useState(false);
   const [formData, setFormData] = useState({
@@ -320,7 +347,6 @@ const Auth = ({ onLogin, t }) => {
     name: "",
   });
   const [error, setError] = useState("");
-
   const images = [
     "https://images.unsplash.com/photo-1501901609772-df0848060b33?auto=format&fit=crop&w=800&q=80",
     "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=800&q=80",
@@ -365,7 +391,6 @@ const Auth = ({ onLogin, t }) => {
   return (
     <div className="auth-page fade-in">
       <div className="auth-container">
-        {/* Lado Esquerdo: Carrossel */}
         <div className="auth-visuals">
           {images.map((src, i) => (
             <img
@@ -376,33 +401,27 @@ const Auth = ({ onLogin, t }) => {
             />
           ))}
         </div>
-
-        {/* Lado Direito: Formulário Elegante */}
         <div className="auth-content">
           <div className="insta-box">
             <h1 className="auth-logo">Memorio</h1>
             <p className="auth-subtitle">
               {isRegister ? t("slogan_register") : t("slogan_login")}
             </p>
-
             <form onSubmit={handleSubmit}>
               {isRegister && (
                 <input
                   className="insta-input"
                   placeholder={t("placeholder_name")}
                   required
-                  value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
                 />
               )}
               <input
-                type="email"
                 className="insta-input"
                 placeholder={t("placeholder_user_email")}
                 required
-                value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
@@ -412,29 +431,23 @@ const Auth = ({ onLogin, t }) => {
                 className="insta-input"
                 placeholder={t("placeholder_password")}
                 required
-                value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
               />
-
               <button className="btn-insta">
                 {isRegister ? t("btn_register") : t("btn_login")}
               </button>
             </form>
-
             <div className="separator">
               <span>{t("or")}</span>
             </div>
-
-            {/* Botão Google estilo referência */}
             <button
               className="btn-google"
               onClick={() =>
                 onLogin({ name: "Google User", id: "g1", isGoogle: true })
               }
             >
-              {/* SVG oficial do Google */}
               <svg width="20" height="20" viewBox="0 0 48 48">
                 <path
                   fill="#EA4335"
@@ -455,7 +468,6 @@ const Auth = ({ onLogin, t }) => {
               </svg>
               {t("login_google")}
             </button>
-
             {error && (
               <p
                 style={{
@@ -471,9 +483,8 @@ const Auth = ({ onLogin, t }) => {
                 {error}
               </p>
             )}
-
             <div className="auth-footer">
-              {isRegister ? t("have_account") : t("no_account")}
+              {isRegister ? t("have_account") : t("no_account")}{" "}
               <b onClick={() => setIsRegister(!isRegister)}>
                 {isRegister ? t("connect") : t("btn_register")}
               </b>
@@ -485,7 +496,7 @@ const Auth = ({ onLogin, t }) => {
   );
 };
 
-// --- SETTINGS (Dropdown) ---
+// --- SETTINGS (CORRIGIDO: Lista Todos os Temas) ---
 const SettingsMenu = ({ onSetTheme, onLogout, setLang, t }) => {
   const [open, setOpen] = useState(false);
   const [sub, setSub] = useState("");
@@ -520,30 +531,33 @@ const SettingsMenu = ({ onSetTheme, onLogout, setLang, t }) => {
             )}
           </div>
           {sub === "theme" && (
-            <div style={{ display: "flex", gap: 5, padding: "5px 10px" }}>
-              {["wine", "sweet", "dark"].map((th) => (
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                padding: "5px 10px",
+                flexWrap: "wrap",
+              }}
+            >
+              {/* Gera as bolinhas dinamicamente baseado no objeto THEME_COLORS */}
+              {Object.keys(THEME_COLORS).map((themeKey) => (
                 <div
-                  key={th}
-                  onClick={() => onSetTheme(th)}
+                  key={themeKey}
+                  onClick={() => onSetTheme(themeKey)}
+                  title={t(`theme_${themeKey}`)}
                   style={{
-                    width: 20,
-                    height: 20,
+                    width: 24,
+                    height: 24,
                     borderRadius: "50%",
-                    background:
-                      th === "wine"
-                        ? "#800020"
-                        : th === "sweet"
-                        ? "#ffb7c5"
-                        : "#333",
-                    border: "1px solid #ccc",
                     cursor: "pointer",
+                    background: THEME_COLORS[themeKey],
+                    border: "1px solid #ccc",
+                    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
                   }}
-                  title={t(`theme_${th}`)}
                 />
               ))}
             </div>
           )}
-
           <div
             className="menu-item"
             onClick={() => setSub(sub === "lang" ? "" : "lang")}
@@ -571,7 +585,6 @@ const SettingsMenu = ({ onSetTheme, onLogout, setLang, t }) => {
               </div>
             </div>
           )}
-
           <div style={{ height: 1, background: "#eee", margin: "5px 0" }}></div>
           <div
             className="menu-item"
@@ -591,17 +604,16 @@ const HeroStrip = ({ memories, onSelect }) => {
   const displayItems = [...memories].slice(0, 3);
   while (displayItems.length < 3) {
     displayItems.push({
-      id: "placeholder-" + displayItems.length,
+      id: "ph-" + displayItems.length,
       media:
         "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1000&q=80",
       title: "Memorio",
       isPlaceholder: true,
     });
   }
-
   return (
     <div className="hero-strip fade-in">
-      {displayItems.map((item, idx) => (
+      {displayItems.map((item) => (
         <div
           key={item.id}
           className="hero-item"
@@ -621,8 +633,7 @@ const HeroStrip = ({ memories, onSelect }) => {
   );
 };
 
-// --- HEADER (REUSÁVEL) ---
-// ATUALIZADO: Recebe search e setSearch, e renderiza a busca antes do SettingsMenu
+// --- HEADER ---
 const Header = ({
   onNew,
   onViewAlbums,
@@ -649,7 +660,6 @@ const Header = ({
       </span>
     </nav>
     <div className="header-actions">
-      {/* Barra de Pesquisa aqui */}
       <div className="search-box" style={{ marginRight: "1rem" }}>
         <input
           type="text"
@@ -659,11 +669,109 @@ const Header = ({
         />
         <Search size={18} color="var(--text-muted)" />
       </div>
-      {/* Botão de Configurações aqui */}
       <SettingsMenu {...settingsProps} />
     </div>
   </header>
 );
+
+// --- COMPONENTE: MODAL DE NOVO ÁLBUM (COM UPLOAD DE CAPA) ---
+const CreateAlbumModal = ({ isOpen, onClose, onConfirm, t }) => {
+  const [name, setName] = useState("");
+  const [cover, setCover] = useState(null);
+
+  if (!isOpen) return null;
+
+  const handleFile = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onloadend = () => setCover(r.result);
+    r.readAsDataURL(f);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (name.trim()) {
+      onConfirm({ title: name, cover: cover });
+      setName("");
+      setCover(null);
+    }
+  };
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+        <h3 className="modal-title">{t("new_album")}</h3>
+        <form onSubmit={handleSubmit}>
+          <div
+            className="modal-upload-area"
+            onClick={() => document.getElementById("album-cover").click()}
+          >
+            <input
+              type="file"
+              id="album-cover"
+              style={{ display: "none" }}
+              onChange={handleFile}
+              accept="image/*"
+            />
+            {cover ? (
+              <img src={cover} alt="Cover" className="modal-cover-preview" />
+            ) : (
+              <div className="modal-upload-placeholder">
+                <ImageIcon size={24} style={{ marginBottom: 5 }} />
+                <br />
+                {t("lbl_cover")}
+              </div>
+            )}
+          </div>
+          <input
+            autoFocus
+            type="text"
+            className="modal-input"
+            placeholder={t("album_name_placeholder")}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <div className="modal-actions">
+            <button
+              type="button"
+              onClick={onClose}
+              className="btn-modal-cancel"
+            >
+              {t("btn_back")}
+            </button>
+            <button type="submit" className="btn-modal-confirm">
+              {t("btn_create")}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// --- COMPONENTE: MODAL DE CONFIRMAÇÃO ---
+const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message, t }) => {
+  if (!isOpen) return null;
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+        <h3 className="modal-title">{title}</h3>
+        <p style={{ marginBottom: "2rem", color: "var(--text-muted)" }}>
+          {message}
+        </p>
+        <div className="modal-actions">
+          <button onClick={onClose} className="btn-modal-cancel">
+            {t("btn_cancel")}
+          </button>
+          <button onClick={onConfirm} className="btn-modal-danger">
+            {t("btn_delete")}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // --- DASHBOARD ---
 const Dashboard = ({
@@ -686,7 +794,6 @@ const Dashboard = ({
 
   return (
     <div style={{ minHeight: "100vh", paddingBottom: 50 }}>
-      {/* Passando search e setSearch para o Header */}
       <Header
         onNew={onNew}
         onViewAlbums={onViewAlbums}
@@ -706,7 +813,6 @@ const Dashboard = ({
           </h2>
           <p className="section-subtitle">{t("subtitle_dash")}</p>
         </div>
-        {/* Barra de busca removida daqui */}
         <div className="grid-polaroid">
           {filtered.map((mem, i) => (
             <div
@@ -763,26 +869,6 @@ const Dashboard = ({
                   style={{ position: "absolute", top: 10, right: 10 }}
                 />
               )}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(mem.id);
-                }}
-                style={{
-                  position: "absolute",
-                  top: -10,
-                  left: -10,
-                  background: "#fff",
-                  border: "1px solid #ccc",
-                  borderRadius: "50%",
-                  width: 25,
-                  height: 25,
-                  cursor: "pointer",
-                  color: "var(--text-muted)",
-                }}
-              >
-                <Trash2 size={12} />
-              </button>
             </div>
           ))}
         </div>
@@ -802,18 +888,14 @@ const FavoritesView = ({
   t,
   settingsProps,
 }) => {
-  // Estado de busca local para favoritos
   const [search, setSearch] = useState("");
   const favorites = memories.filter((m) => m.isFavorite);
-  const filteredFavorites = favorites.filter(
-    (m) =>
-      m.title.toLowerCase().includes(search.toLowerCase()) ||
-      (m.location && m.location.toLowerCase().includes(search.toLowerCase()))
+  const filteredFavorites = favorites.filter((m) =>
+    m.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div style={{ minHeight: "100vh", paddingBottom: 50 }}>
-      {/* Header com busca funcional para favoritos */}
       <Header
         onNew={onNew}
         onViewAlbums={onViewAlbums}
@@ -841,11 +923,7 @@ const FavoritesView = ({
             }}
           >
             <Heart size={48} style={{ opacity: 0.2, marginBottom: 10 }} />
-            <p>
-              {favorites.length === 0
-                ? "Você ainda não tem favoritos."
-                : "Nenhum favorito encontrado para sua busca."}
-            </p>
+            <p>Você ainda não tem favoritos.</p>
           </div>
         ) : (
           <div className="grid-polaroid">
@@ -880,6 +958,118 @@ const FavoritesView = ({
   );
 };
 
+// --- ALBUMS VIEW ---
+const AlbumsView = ({
+  albums,
+  onSelectAlbum,
+  onCreateAlbum,
+  onViewHome,
+  onViewAlbums,
+  onViewFavorites,
+  onNew,
+  t,
+  settingsProps,
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const handleCreate = (albumData) => {
+    onCreateAlbum(albumData);
+    setIsModalOpen(false);
+  };
+
+  return (
+    <div style={{ minHeight: "100vh", paddingBottom: 50 }}>
+      <Header
+        onNew={onNew}
+        onViewAlbums={onViewAlbums}
+        onViewFavorites={onViewFavorites}
+        onViewHome={onViewHome}
+        settingsProps={settingsProps}
+        t={t}
+        search={search}
+        setSearch={setSearch}
+      />
+      <div className="container fade-in" style={{ paddingTop: "2rem" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 30,
+          }}
+        >
+          <button onClick={onViewHome} className="btn-icon">
+            <ArrowLeft /> {t("btn_home")}
+          </button>
+          <h2 style={{ fontFamily: "Cinzel", fontSize: "2rem" }}>
+            {t("my_albums")}
+          </h2>
+          <div style={{ width: 80 }}></div>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+            gap: "2rem",
+          }}
+        >
+          <div
+            onClick={() => setIsModalOpen(true)}
+            style={{
+              border: "2px dashed var(--border-light)",
+              borderRadius: 4,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: 300,
+              cursor: "pointer",
+              transition: "0.3s",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.borderColor = "var(--primary)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.borderColor = "var(--border-light)")
+            }
+          >
+            <Plus size={40} color="var(--primary)" />
+            <p style={{ marginTop: 10, fontFamily: "Cinzel", fontWeight: 600 }}>
+              {t("new_album")}
+            </p>
+          </div>
+          {albums.map((a) => (
+            <div
+              key={a.id}
+              className="polaroid-card"
+              onClick={() => onSelectAlbum(a)}
+              style={{ minHeight: 300, transform: "rotate(0deg)" }}
+            >
+              <img
+                src={
+                  a.cover ||
+                  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
+                }
+                className="polaroid-img"
+                style={{ height: 250 }}
+                alt={a.title}
+              />
+              <div className="polaroid-caption">{a.title}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <CreateAlbumModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleCreate}
+        t={t}
+      />
+    </div>
+  );
+};
+
 // --- FORMULÁRIO ---
 const MemoryForm = ({
   onSave,
@@ -909,7 +1099,6 @@ const MemoryForm = ({
     }
   );
   const [loc, setLoc] = useState(parseLoc(initialData?.location));
-
   const handleFile = (e) => {
     const f = e.target.files[0];
     if (!f) return;
@@ -1095,6 +1284,8 @@ function App() {
     localStorage.getItem("mesq_theme") || "wine"
   );
   const [lang, setLang] = useState(localStorage.getItem("mesq_lang") || "pt");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false); // Para Álbuns
+  const [deleteMemoryId, setDeleteMemoryId] = useState(null); // Para Memórias
 
   const t = (key) => TRANSLATIONS[lang][key] || key;
 
@@ -1128,13 +1319,45 @@ function App() {
     setMemories(newMemories);
     localStorage.setItem("mesq_memories", JSON.stringify(newMemories));
   };
-  const handleCreateAlbum = (name) => {
-    const newAlbum = { id: Date.now().toString(), title: name, cover: null };
+
+  const handleCreateAlbum = ({ title, cover }) => {
+    const newAlbum = { id: Date.now().toString(), title, cover };
     const updated = [...albums, newAlbum];
     setAlbums(updated);
     localStorage.setItem("mesq_albums", JSON.stringify(updated));
     setNotification({ message: "Álbum criado!", type: "success" });
   };
+
+  const handleConfirmDeleteAlbum = () => {
+    if (!currentAlbum) return;
+    const updatedAlbums = albums.filter((a) => a.id !== currentAlbum.id);
+    setAlbums(updatedAlbums);
+    localStorage.setItem("mesq_albums", JSON.stringify(updatedAlbums));
+    const updatedMemories = memories.map((m) =>
+      m.albumId === currentAlbum.id ? { ...m, albumId: "" } : m
+    );
+    saveMemories(updatedMemories);
+    setNotification({ message: "Álbum excluído.", type: "success" });
+    setDeleteModalOpen(false);
+    setCurrentAlbum(null);
+    setView("albums");
+  };
+
+  const handleConfirmDeleteMemory = () => {
+    if (!deleteMemoryId) return;
+    saveMemories(memories.filter((m) => m.id !== deleteMemoryId));
+    setNotification({ message: "Memória excluída.", type: "success" });
+    setDeleteMemoryId(null);
+    setSelectedMemory(null);
+    setView(
+      currentAlbum
+        ? "album-detail"
+        : view === "favorites"
+        ? "favorites"
+        : "dashboard"
+    );
+  };
+
   const handleSaveMemory = (data) => {
     let updated;
     if (editingMemory)
@@ -1156,6 +1379,7 @@ function App() {
     setEditingMemory(null);
     setView(currentAlbum ? "album-detail" : "dashboard");
   };
+
   const handleDelete = (id) => {
     if (window.confirm("Excluir?")) {
       saveMemories(memories.filter((m) => m.id !== id));
@@ -1166,7 +1390,6 @@ function App() {
   const displayedMemories = currentAlbum
     ? memories.filter((m) => m.albumId === currentAlbum.id)
     : memories;
-
   const settingsProps = {
     onSetTheme: setTheme,
     onLogout: handleLogout,
@@ -1230,75 +1453,24 @@ function App() {
           )}
 
           {view === "albums" && (
-            <div className="container fade-in" style={{ paddingTop: "2rem" }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: 30,
-                }}
-              >
-                <button
-                  onClick={() => setView("dashboard")}
-                  className="btn-icon"
-                >
-                  <ArrowLeft /> {t("btn_home")}
-                </button>
-                <h2 style={{ fontFamily: "Cinzel", fontSize: "2rem" }}>
-                  {t("my_albums")}
-                </h2>
-                <div style={{ width: 80 }}></div>
-              </div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-                  gap: "2rem",
-                }}
-              >
-                <div
-                  onClick={() => {
-                    const n = prompt(t("album_name_placeholder"));
-                    if (n) handleCreateAlbum(n);
-                  }}
-                  style={{
-                    border: "2px dashed var(--border-light)",
-                    borderRadius: 4,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    minHeight: 300,
-                    cursor: "pointer",
-                  }}
-                >
-                  <Plus size={40} color="var(--primary)" />{" "}
-                  <p>{t("new_album")}</p>
-                </div>
-                {albums.map((a) => (
-                  <div
-                    key={a.id}
-                    className="polaroid-card"
-                    onClick={() => {
-                      setCurrentAlbum(a);
-                      setView("album-detail");
-                    }}
-                    style={{ minHeight: 300, transform: "rotate(0deg)" }}
-                  >
-                    <img
-                      src={
-                        a.cover ||
-                        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
-                      }
-                      className="polaroid-img"
-                      style={{ height: 250 }}
-                    />
-                    <div className="polaroid-caption">{a.title}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <AlbumsView
+              albums={albums}
+              onSelectAlbum={(alb) => {
+                setCurrentAlbum(alb);
+                setView("album-detail");
+              }}
+              onCreateAlbum={handleCreateAlbum}
+              onViewHome={() => setView("dashboard")}
+              onViewAlbums={() => setView("albums")}
+              onViewFavorites={() => setView("favorites")}
+              onNew={() => {
+                setEditingMemory(null);
+                setCurrentAlbum(null);
+                setView("create");
+              }}
+              t={t}
+              settingsProps={settingsProps}
+            />
           )}
 
           {view === "album-detail" && currentAlbum && (
@@ -1311,21 +1483,49 @@ function App() {
                   marginBottom: 30,
                 }}
               >
-                <button onClick={() => setView("albums")} className="btn-icon">
-                  <ArrowLeft /> {t("btn_albums")}
-                </button>
-                <h1 style={{ fontFamily: "Cinzel", fontSize: "2.5rem" }}>
-                  {currentAlbum.title}
-                </h1>
-                <button
-                  onClick={() => {
-                    setEditingMemory(null);
-                    setView("create");
-                  }}
-                  className="btn-primary"
-                >
-                  <Plus size={16} /> {t("btn_add_here")}
-                </button>
+                <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
+                  <button
+                    onClick={() => setView("albums")}
+                    className="btn-icon"
+                  >
+                    <ArrowLeft /> {t("btn_albums")}
+                  </button>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <h1
+                    style={{
+                      fontFamily: "Cinzel",
+                      fontSize: "2.5rem",
+                      margin: 0,
+                    }}
+                  >
+                    {currentAlbum.title}
+                  </h1>
+                  <span
+                    style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}
+                  >
+                    {displayedMemories.length} {t("empty_album")}
+                  </span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <button
+                    onClick={() => setDeleteModalOpen(true)}
+                    className="btn-icon"
+                    style={{ color: "var(--danger)" }}
+                    title="Excluir Álbum"
+                  >
+                    <Trash2 size={20} />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEditingMemory(null);
+                      setView("create");
+                    }}
+                    className="btn-primary"
+                  >
+                    <Plus size={16} /> {t("btn_add_here")}
+                  </button>
+                </div>
               </div>
               <div className="grid-polaroid">
                 {displayedMemories.map((mem) => (
@@ -1395,15 +1595,26 @@ function App() {
                   >
                     <ArrowLeft /> {t("btn_back")}
                   </button>
-                  <button
-                    onClick={() =>
-                      setEditingMemory(selectedMemory) || setView("create")
-                    }
-                    className="btn-icon"
-                    style={{ color: "var(--primary)" }}
-                  >
-                    <Edit2 />
-                  </button>
+                  <div style={{ display: "flex", gap: "15px" }}>
+                    <button
+                      onClick={() => setDeleteMemoryId(selectedMemory.id)}
+                      className="btn-icon"
+                      style={{ color: "var(--danger)" }}
+                      title={t("btn_delete")}
+                    >
+                      <Trash2 />
+                    </button>
+                    <button
+                      onClick={() =>
+                        setEditingMemory(selectedMemory) || setView("create")
+                      }
+                      className="btn-icon"
+                      style={{ color: "var(--primary)" }}
+                      title={t("title_edit")}
+                    >
+                      <Edit2 />
+                    </button>
+                  </div>
                 </div>
                 <div
                   className="polaroid-card"
@@ -1474,6 +1685,23 @@ function App() {
               </div>
             </div>
           )}
+
+          <ConfirmModal
+            isOpen={deleteModalOpen}
+            onClose={() => setDeleteModalOpen(false)}
+            onConfirm={handleConfirmDeleteAlbum}
+            title={t("delete_album_title")}
+            message={t("delete_album_confirm")}
+            t={t}
+          />
+          <ConfirmModal
+            isOpen={!!deleteMemoryId}
+            onClose={() => setDeleteMemoryId(null)}
+            onConfirm={handleConfirmDeleteMemory}
+            title={t("delete_memory_title")}
+            message={t("delete_memory_confirm")}
+            t={t}
+          />
         </>
       )}
     </div>
