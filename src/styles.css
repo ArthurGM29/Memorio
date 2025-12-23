@@ -1,478 +1,828 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&family=Dancing+Script:wght@600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&family=Dancing+Script:wght@500;700&display=swap");
 
-/* --- VARIÁVEIS DE TEMA --- */
 :root {
-  /* PADRÃO: CLASSIC WINE */
-  --bg-body: #f4f1ea; /* Papel levemente texturizado/creme */
-  --bg-glass: rgba(255, 255, 255, 0.95);
-  --border-glass: rgba(128, 0, 32, 0.1);
+  /* --- TEMA PADRÃO: CLASSIC WINE (Vinho & Creme) --- */
+  --bg-body: #fdfbf7; /* Creme muito suave, quase branco, mas quente */
+  --bg-glass: rgba(253, 251, 247, 0.95); /* Vidro na cor do fundo */
+  --border-light: rgba(128, 0, 32, 0.1); /* Borda sutil vinho */
 
-  --text-main: #2b1d1d;
-  --text-muted: #8c7b7b;
-
-  --primary: #800020; /* Vinho */
+  --primary: #800020; /* Vinho Principal */
   --primary-hover: #5c0017;
   --secondary: #d4af37; /* Dourado */
 
+  --text-main: #2b1d1d; /* Marrom café quase preto */
+  --text-muted: #8c7b7b;
   --danger: #c0392b;
-  --shadow: 0 10px 30px rgba(128, 0, 32, 0.08);
-  --input-bg: #fff;
-  --radius: 12px;
 
-  --bg-gradient: radial-gradient(
-    circle at 50% 50%,
-    rgba(128, 0, 32, 0.03) 0%,
-    transparent 60%
-  );
+  --card-bg: #ffffff; /* Polaroids Brancas */
+  --shadow-card: 0 4px 15px rgba(128, 0, 32, 0.08);
+
+  --input-bg: rgba(255, 255, 255, 0.5);
 }
 
-/* TEMA: SWEET */
+/* --- TEMA: SWEET (Rosa & Soft) --- */
 [data-theme="sweet"] {
-  --bg-body: #fff0f5;
-  --bg-glass: rgba(255, 255, 255, 0.9);
-  --border-glass: rgba(255, 105, 180, 0.2);
-  --text-main: #5c4b51;
-  --text-muted: #9e8c92;
-  --primary: #ff69b4;
+  --bg-body: #fff0f5; /* Lavanda/Rosa muito claro */
+  --bg-glass: rgba(255, 240, 245, 0.95);
+  --border-light: rgba(255, 105, 180, 0.2);
+
+  --primary: #ff69b4; /* Pink */
   --primary-hover: #db4c93;
   --secondary: #ffb7c5;
-  --bg-gradient: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
+
+  --text-main: #5c4b51; /* Cinza rosado */
+  --text-muted: #9e8c92;
+
+  --card-bg: #fffbfd; /* Branco rosado */
+  --shadow-card: 0 4px 15px rgba(255, 105, 180, 0.15);
+
+  --input-bg: rgba(255, 255, 255, 0.6);
 }
 
-/* TEMA: DARK */
+/* --- TEMA: DARK (Luxo Noturno) --- */
 [data-theme="dark"] {
-  --bg-body: #121212;
-  --bg-glass: rgba(30, 30, 30, 0.85);
-  --border-glass: rgba(255, 255, 255, 0.1);
-  --text-main: #e0e0e0;
-  --text-muted: #cec7c7;
-  --primary: #c0234b; /* Dourado Ouro no escuro */
-  --primary-hover: #b62b4d;
+  --bg-body: #111111; /* Preto Fosco */
+  --bg-glass: rgba(17, 17, 17, 0.95);
+  --border-light: rgba(255, 255, 255, 0.1);
+
+  --primary: #bd2047; /* Dourado é a cor principal no escuro */
+  --primary-hover: #9c2644;
   --secondary: #333;
-  --input-bg: #1e1e1e;
-  --shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
-  --bg-gradient: radial-gradient(
-    circle at 50% 0%,
-    rgba(207, 181, 59, 0.1) 0%,
-    transparent 60%
-  );
+
+  --text-main: #f0f0f0;
+  --text-muted: #888;
+
+  --card-bg: #1e1e1e; /* Polaroids Escuras */
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+  --input-bg: rgba(255, 255, 255, 0.05);
 }
 
-/* --- RESET --- */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+
 body {
   font-family: "Lato", sans-serif;
   background-color: var(--bg-body);
-  background-image: var(--bg-gradient);
-  background-attachment: fixed;
   color: var(--text-main);
-  transition: all 0.5s ease;
-  min-height: 100vh;
-}
-h1,
-h2,
-h3 {
-  font-family: "Cinzel", serif;
-  color: var(--primary);
+  transition: all 0.4s ease; /* Transição suave entre temas */
+  overflow-x: hidden;
 }
 
 /* --- UTILITÁRIOS --- */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
 .fade-in {
-  animation: fadeIn 0.6s ease;
+  animation: fadeIn 0.8s ease;
 }
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(15px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
-/* --- COMPONENTES GERAIS --- */
-.glass-panel {
-  background: var(--bg-glass);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-glass);
-  box-shadow: var(--shadow);
-  border-radius: var(--radius);
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
-/* Inputs & Buttons */
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 1rem;
-  border-radius: 6px;
-  border: 1px solid var(--border-glass);
-  background: var(--input-bg);
+/* Botões */
+.btn-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
   color: var(--text-main);
-  font-family: inherit;
+  padding: 8px;
+  transition: transform 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
-input:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--primary);
+.btn-icon:hover {
+  transform: scale(1.1);
+  color: var(--primary);
 }
 
 .btn-primary {
   background: var(--primary);
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 4px;
+  color: var(--bg-body); /* Texto contrasta com o fundo */
+  border: none;
+  padding: 10px 24px;
+  border-radius: 2px;
+  font-family: "Cinzel", serif;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 1px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: 0.3s;
-}
-.btn-primary:hover {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
-}
-
-.btn-icon {
-  background: transparent;
-  border: 1px solid var(--border-glass);
-  color: var(--text-muted);
-  padding: 8px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
   transition: 0.3s;
 }
-.btn-icon:hover {
+[data-theme="dark"] .btn-primary {
+  color: #000;
+} /* Ajuste para dourado no preto */
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+/* --- HEADER MINIMALISTA (Dinâmico) --- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-glass); /* Agora usa a cor do vidro do tema */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-light);
+  padding: 1.2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.4s ease;
+}
+
+.header-brand {
+  font-family: "Dancing Script", cursive;
+  font-size: 2rem;
   color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.header-nav {
+  display: flex;
+  gap: 2rem;
+}
+.nav-link {
+  font-family: "Cinzel", serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: 0.3s;
+  letter-spacing: 1px;
+}
+.nav-link:hover {
+  color: var(--primary);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Input de busca adaptável */
+.search-container input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+  width: 120px;
+  color: var(--text-main);
+}
+.search-container input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.search-box {
+  border-bottom: 1px solid var(--text-muted);
+  display: flex;
+  align-items: center; /* Garante alinhamento vertical */
+  padding: 5px;
+  width: 200px; /* Largura reduzida para caber no header */
+  transition: all 0.3s ease;
+}
+
+.search-box input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  width: 100%;
+  color: var(--text-main);
+  font-family: "Lato", sans-serif;
+}
+
+.search-box:focus-within {
+  border-bottom-color: var(--primary);
+}
+
+/* --- HERO STRIP (3 IMAGENS TOPO) --- */
+.hero-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  height: 500px;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-body);
+}
+
+.hero-item {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  overflow: hidden;
+  border-right: 1px solid var(--bg-body); /* Separação sutil na cor do fundo */
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+.hero-item:hover .hero-img {
+  transform: scale(1.05);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-item:hover .hero-overlay {
+  opacity: 1;
+}
+
+.hero-text {
+  color: #fff;
+  font-family: "Cinzel", serif;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border: 1px solid #fff;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+}
+
+/* --- FORMULÁRIO EDITORIAL (NOVA MEMÓRIA) --- */
+
+/* O Container do Modal/Formulário */
+.editor-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--bg-body); /* Fundo sólido do tema */
+  padding: 3rem 4rem;
+  border-radius: 4px; /* Cantos retos elegantes */
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); /* Sombra de profundidade */
+  border: 1px solid var(--border-light);
+  position: relative;
+}
+
+/* Título do Modal */
+.editor-title {
+  font-family: "Cinzel", serif;
+  font-size: 2.2rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  color: var(--primary);
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 1rem;
+}
+
+/* Grid de Inputs */
+.editor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Estilo dos Inputs (Limpo e Moderno) */
+.editor-input {
+  width: 100%;
+  padding: 12px 0; /* Sem padding lateral, estilo linha */
+  border: none;
+  border-bottom: 1px solid #ddd;
+  background: transparent;
+  border-radius: 0;
+  font-family: "Lato", sans-serif;
+  font-size: 1rem;
+  color: var(--text-main);
+  transition: all 0.3s ease;
+}
+
+.editor-input:focus {
+  outline: none;
+  border-bottom-color: var(--primary);
+  box-shadow: none;
+}
+
+.editor-input::placeholder {
+  color: #aaa;
+  font-weight: 300;
+}
+
+/* Labels Pequenos (Microinterações) */
+.editor-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+/* Área de Upload (Destaque) */
+.editor-upload {
+  width: 100%;
+  height: 300px;
+  border: 1px dashed #ccc;
+  background-color: rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 2rem 0;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.editor-upload:hover {
+  background-color: rgba(0, 0, 0, 0.04);
   border-color: var(--primary);
 }
 
-/* --- MEMORY CARD: ESTILO POLAROID --- */
-.grid {
+.upload-placeholder {
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.upload-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Mostra a imagem inteira */
+  background: #000; /* Fundo escuro para realçar fotos */
+}
+
+/* Textarea (História) */
+.editor-textarea {
+  width: 100%;
+  border: 1px solid #eee;
+  background: #fafafa;
+  padding: 1.5rem;
+  font-family: "Lato", sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 150px;
+  transition: 0.3s;
+}
+.editor-textarea:focus {
+  background: #fff;
+  border-color: var(--primary);
+  outline: none;
+}
+
+/* Checkbox Favorito */
+.editor-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 1.5rem 0 2.5rem 0;
+  cursor: pointer;
+}
+
+.editor-checkbox {
+  accent-color: var(--primary);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Responsivo para o Form */
+@media (max-width: 768px) {
+  .editor-container {
+    padding: 1.5rem;
+  }
+  .editor-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .editor-upload {
+    height: 200px;
+  }
+}
+
+/* --- GRID DE LOCALIZAÇÃO (Uniforme e Elegante) --- */
+.location-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* 3 colunas iguais */
+  gap: 2rem; /* Espaçamento generoso */
+  align-items: start;
+}
+
+/* Garante que os inputs dentro do seletor tenham o mesmo estilo editorial */
+.location-grid input {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  background: transparent;
+  font-family: "Lato", sans-serif;
+  font-size: 1rem;
+  color: var(--text-main);
+  border-radius: 0;
+  transition: all 0.3s ease;
+}
+
+.location-grid input:focus {
+  outline: none;
+  border-bottom-color: var(--primary);
+}
+
+.location-grid input::placeholder {
+  color: #aaa;
+  font-weight: 300;
+}
+
+/* Responsividade: Um embaixo do outro no celular */
+@media (max-width: 768px) {
+  .location-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* --- TÍTULO CENTRALIZADO --- */
+.section-divider {
+  text-align: center;
+  margin: 4rem 0 3rem 0;
+  position: relative;
+}
+.section-title {
+  font-family: "Cinzel", serif;
+  font-size: 2.5rem;
+  color: var(--text-main);
+  display: inline-block;
+  padding: 0 20px;
+  background: var(--bg-body);
+  position: relative;
+  z-index: 1;
+  letter-spacing: 2px;
+  transition: background 0.4s ease;
+}
+.divider-line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 1px;
+  background: var(--primary);
+  opacity: 0.3;
+  z-index: 0;
+}
+.section-subtitle {
+  font-family: "Lato", sans-serif;
+  color: var(--text-muted);
+  margin-top: 10px;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* --- GRID POLAROID (Adaptável) --- */
+.grid-polaroid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 3rem;
-  padding: 2rem 0 4rem 0;
+  padding-bottom: 4rem;
 }
 
-.memory-card {
-  background: #fff; /* Sempre branco para parecer papel foto */
-  padding: 12px 12px 50px 12px; /* Margem inferior grande para escrita */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+.polaroid-card {
+  background: var(--card-bg); /* Fundo da foto muda com o tema */
+  padding: 15px 15px 50px 15px;
+  box-shadow: var(--shadow-card);
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   position: relative;
   cursor: pointer;
-  border-radius: 2px; /* Cantos quase retos */
-  z-index: 1;
+  border-radius: 2px;
 }
 
-/* No tema escuro, o polaroid pode ser levemente cinza ou manter branco para contraste */
-[data-theme="dark"] .memory-card {
-  background: #f0f0f0;
-  color: #222;
-}
-
-.memory-card:hover {
-  transform: scale(1.05) rotate(0deg) !important; /* Fica reto e flutua */
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+.polaroid-card:hover {
+  transform: scale(1.05) rotate(0deg) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   z-index: 10;
 }
 
-.card-media {
+.polaroid-img {
   width: 100%;
-  aspect-ratio: 1/1; /* Quadrado Perfeito */
+  aspect-ratio: 1/1;
   object-fit: cover;
-  border: 1px solid #eee;
-  background: #eee;
-  margin-bottom: 10px;
-  filter: sepia(15%); /* Filtro Vintage */
+  background: #eee; /* Placeholder cinza */
+  margin-bottom: 15px;
+  filter: sepia(10%);
   transition: filter 0.3s;
 }
-.memory-card:hover .card-media {
+[data-theme="dark"] .polaroid-img {
+  border: 1px solid #333;
+  filter: brightness(0.9) sepia(10%);
+}
+.polaroid-card:hover .polaroid-img {
   filter: sepia(0%);
 }
 
-.card-content {
-  position: absolute;
-  bottom: 5px;
-  left: 15px;
-  right: 15px;
-  text-align: center;
-}
-
-.card-title {
-  font-family: "Dancing Script", cursive; /* Fonte Manuscrita */
+.polaroid-caption {
+  font-family: "Dancing Script", cursive;
   font-size: 1.8rem;
-  color: #2b1d1d;
-  margin: 0;
+  color: var(--primary);
+  text-align: center;
   line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
-
-.card-date {
-  font-size: 0.75rem;
-  color: #888;
-  font-family: "Lato", sans-serif;
+.polaroid-meta {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 1px;
+  margin-top: 5px;
 }
 
-/* --- FLASHBACK WIDGET (NESTE DIA) --- */
-.flashback-widget {
-  background: linear-gradient(135deg, var(--bg-glass), #fff);
-  border: 1px solid var(--secondary);
-  padding: 1.5rem;
-  margin-bottom: 3rem;
+/* --- MENUS E MODAIS --- */
+.glass-panel {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-light);
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15);
-}
-.flashback-content {
-  flex: 1;
-}
-.flashback-badge {
-  background: var(--secondary);
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.7rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  display: inline-block;
-  margin-bottom: 5px;
+  backdrop-filter: blur(15px);
 }
 
-/* --- SETTINGS & AUTH (Mantidos e ajustados) --- */
-.settings-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
-}
 .dropdown-menu {
   position: absolute;
   top: 50px;
   right: 0;
-  width: 220px;
+  width: 200px;
   background: var(--bg-glass);
-  backdrop-filter: blur(15px);
-  border: 1px solid var(--border-glass);
-  border-radius: 8px;
-  padding: 0.5rem;
-  box-shadow: var(--shadow);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-card);
+  padding: 10px;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
 }
 .menu-item {
-  width: 100%;
   padding: 10px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  background: transparent;
   color: var(--text-main);
   font-size: 0.9rem;
-  transition: 0.2s;
   cursor: pointer;
+  transition: 0.2s;
   border-radius: 4px;
 }
 .menu-item:hover {
-  background: rgba(128, 0, 32, 0.05);
   color: var(--primary);
+  background: rgba(128, 0, 32, 0.05);
 }
 
-/* --- RESPONSIVO --- */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  .grid {
-    grid-template-columns: 1fr;
-    padding: 0 2rem;
-  }
-  .memory-card {
-    transform: none !important;
-    margin-bottom: 2rem;
-  }
-}
-/* --- LOGIN ESTILO INSTAGRAM (MEMORIO) --- */
+/* --- LOGIN PAGE (VISUAL PREMIUM & ELEGANTE) --- */
 .auth-page {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background-color: #fafafa; /* Fundo padrão do Instagram */
+  justify-content: center;
+  /* Imagem de fundo com overlay vinho sutil */
+  background: linear-gradient(rgba(43, 29, 29, 0.5), rgba(43, 29, 29, 0.5)),
+    url("https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=80");
+  background-size: cover;
+  background-position: center;
   padding: 20px;
 }
 
 .auth-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
-  max-width: 935px; /* Largura padrão do container do Instagram */
-  gap: 32px;
+  max-width: 950px;
+  min-height: 650px;
+  /* Efeito de vidro fosco premium */
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 24px;
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
-/* Lado Esquerdo: Visual (Slideshow) */
+/* Coluna da Imagem (Esquerda) */
 .auth-visuals {
-  display: none; /* Escondido no mobile */
-  flex: 1;
-  height: 580px;
+  flex: 1.2;
   position: relative;
-  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: none;
+}
+@media (min-width: 900px) {
+  .auth-visuals {
+    display: block;
+  }
 }
 
 .visual-slide {
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   opacity: 0;
   transition: opacity 1.5s ease-in-out;
 }
-
 .visual-slide.active {
   opacity: 1;
 }
 
-/* Lado Direito: Formulários */
+.auth-visuals::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.2), transparent);
+}
+
+/* Coluna do Formulário (Direita) */
 .auth-content {
-  width: 100%;
-  max-width: 350px;
+  flex: 1;
+  padding: 4rem 3rem;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
 .insta-box {
-  background: #ffffff;
-  border: 1px solid #dbdbdb; /* Borda clássica do Insta */
-  padding: 2.5rem 2.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 100%;
+  max-width: 360px; /* Um pouco mais largo para elegância */
   text-align: center;
 }
 
-.insta-logo {
+/* Tipografia */
+.auth-logo {
   font-family: "Dancing Script", cursive;
-  font-size: 3rem;
-  margin-bottom: 2rem;
-  color: var(--primary); /* Vinho do seu tema */
+  font-size: 4rem;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+.auth-subtitle {
+  font-family: "Cinzel", serif;
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
-/* Inputs estilo Insta */
-.insta-input-group {
-  width: 100%;
-  margin-bottom: 6px;
-}
-
+/* --- INPUTS MAIS BONITOS --- */
 .insta-input {
   width: 100%;
-  background: #fafafa;
-  border: 1px solid #dbdbdb;
-  border-radius: 3px; /* Cantos pouco arredondados */
-  padding: 9px 8px 7px;
-  font-size: 12px;
-  color: #262626;
-  outline: none;
+  padding: 16px 20px; /* Mais espaço interno */
+  margin-bottom: 1.2rem;
+  border: 1px solid #e0e0e0;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px; /* Cantos mais arredondados */
+  font-size: 1rem;
+  font-family: "Lato", sans-serif;
+  color: var(--text-main);
+  transition: all 0.3s ease;
 }
-
 .insta-input:focus {
-  border: 1px solid #a8a8a8;
+  border-color: var(--primary);
+  background: #fff;
+  outline: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Sombra suave ao focar */
 }
-
 .insta-input::placeholder {
-  color: #8e8e8e;
+  color: #aaa;
 }
 
-/* Botão estilo Insta */
+/* --- BOTÃO PRINCIPAL (Entrar) --- */
 .btn-insta {
   width: 100%;
-  background-color: var(--primary); /* Vinho */
+  background: var(--primary);
   color: #fff;
-  border-radius: 4px;
-  font-weight: 600;
-  padding: 7px 16px;
-  font-size: 14px;
-  margin-top: 15px;
   border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-top: 1rem;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.3s;
+  font-family: "Cinzel", serif;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 20px -5px rgba(0, 0, 0, 0.2); /* Sombra de profundidade */
 }
-
 .btn-insta:hover {
-  background-color: var(--primary-hover);
+  background: var(--primary-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
+/* --- SEPARADOR ELEGANTE --- */
 .separator {
   display: flex;
   align-items: center;
-  width: 100%;
-  margin: 20px 0;
+  margin: 2rem 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: "Cinzel", serif;
 }
-
-.line {
+.separator::before,
+.separator::after {
+  content: "";
   flex: 1;
   height: 1px;
-  background-color: #dbdbdb;
+  background: #e0e0e0;
+}
+.separator span {
+  padding: 0 15px;
 }
 
-.or-text {
-  margin: 0 18px;
-  font-size: 13px;
+/* --- BOTÃO GOOGLE (Estilo da Referência) --- */
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px;
+  background: #fff; /* Fundo branco */
+  border: 1px solid #dadce0; /* Borda padrão Google */
+  border-radius: 12px; /* Combina com os inputs */
+  color: #3c4043; /* Cor de texto padrão Google */
   font-weight: 600;
-  color: #8e8e8e;
-  text-transform: uppercase;
-}
-
-.forgot-pass {
-  font-size: 12px;
-  color: var(--primary);
-  margin-top: 15px;
+  font-size: 1rem;
+  font-family: "Lato", sans-serif;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
-
-/* Box Secundário (Cadastre-se) */
-.switch-text {
-  font-size: 14px;
-  margin: 15px 0;
+.btn-google:hover {
+  background: #f8f9fa; /* Cinza muito sutil no hover */
+  border-color: #d2d4d7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
+.btn-google svg {
+  width: 22px;
+  height: 22px;
+} /* Ícone um pouco maior */
 
-.switch-link {
+/* Footer e Erros */
+.auth-footer {
+  margin-top: 2.5rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-family: "Lato", sans-serif;
+}
+.auth-footer b {
   color: var(--primary);
-  font-weight: 600;
   cursor: pointer;
+  margin-left: 6px;
+  transition: 0.2s;
+  font-weight: 700;
+}
+.auth-footer b:hover {
+  text-decoration: underline;
 }
 
-/* Responsivo */
-@media (min-width: 800px) {
-  .auth-visuals {
-    display: block;
-  }
+/* Ajustes Dark Mode */
+[data-theme="dark"] .auth-container {
+  background: rgba(30, 30, 30, 0.85);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+[data-theme="dark"] .insta-input {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: #444;
+  color: #fff;
+}
+[data-theme="dark"] .insta-input:focus {
+  border-color: var(--primary);
+  background: rgba(0, 0, 0, 0.5);
+}
+[data-theme="dark"] .separator::before,
+[data-theme="dark"] .separator::after {
+  background: #444;
+}
+/* Botão Google no Dark Mode (Invertido para ficar elegante) */
+[data-theme="dark"] .btn-google {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #eee;
+}
+[data-theme="dark"] .btn-google:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.4);
 }

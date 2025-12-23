@@ -29,30 +29,132 @@ import {
 } from "lucide-react";
 import "./styles.css";
 
-// --- DADOS INICIAIS ---
+// --- TRADUÇÕES ---
+const TRANSLATIONS = {
+  pt: {
+    slogan_register: "Comece sua jornada de memórias",
+    slogan_login: "Suas memórias, guardadas com beleza",
+    placeholder_name: "Nome completo",
+    placeholder_user_email: "Nome de usuário ou email",
+    placeholder_password: "Senha",
+    btn_register: "Cadastre-se",
+    btn_login: "Entrar",
+    or: "OU",
+    login_google: "Entrar com o Google",
+    forgot_pass: "Esqueceu a senha?",
+    have_account: "Tem uma conta?",
+    no_account: "Não tem uma conta?",
+    connect: "Conecte-se",
+    copyright: "© 2025 Memorio por Você",
+    error_email_use: "Este e-mail já está em uso.",
+    error_login_fail: "Senha incorreta ou usuário inexistente.",
+    hello: "OLÁ",
+    subtitle_dash: "COLECIONANDO MOMENTOS",
+    your_collection: "SUA COLEÇÃO",
+    btn_albums: "ÁLBUNS",
+    btn_favorites: "FAVORITOS",
+    btn_new: "NOVA",
+    search_placeholder: "Buscar...",
+    btn_view: "Ver",
+    title_edit: "Editar Memória",
+    title_new: "Nova Memória",
+    label_title: "Título",
+    label_location: "Localização",
+    label_album_select: "Sem Álbum (Geral)",
+    label_add_media: "Adicionar Foto ou Vídeo",
+    placeholder_story: "Conte a história...",
+    label_fav: "Favorito ❤️",
+    btn_save: "Salvar",
+    btn_back: "Voltar",
+    my_albums: "MEUS ÁLBUNS",
+    my_favorites: "MEUS FAVORITOS",
+    new_album: "Novo Álbum",
+    album_name_placeholder: "Nome do álbum",
+    btn_create: "Criar",
+    btn_home: "Início",
+    btn_add_here: "Add Aqui",
+    empty_album: "memórias",
+    settings_appearance: "Aparência",
+    settings_language: "Idioma",
+    settings_logout: "Sair",
+    theme_wine: "Vinho",
+    theme_sweet: "Sweet",
+    theme_dark: "Dark",
+  },
+  en: {
+    slogan_register: "Begin your memory journey",
+    slogan_login: "Your memories, beautifully stored",
+    placeholder_name: "Full Name",
+    placeholder_user_email: "Username or email",
+    placeholder_password: "Password",
+    btn_register: "Sign up",
+    btn_login: "Log in",
+    or: "OR",
+    login_google: "Log in with Google",
+    forgot_pass: "Forgot password?",
+    have_account: "Have an account?",
+    no_account: "Don't have an account?",
+    connect: "Log in",
+    copyright: "© 2025 Memorio from You",
+    error_email_use: "Email already in use.",
+    error_login_fail: "Incorrect password or username.",
+    hello: "HELLO",
+    subtitle_dash: "COLLECTING MOMENTS",
+    your_collection: "YOUR COLLECTION",
+    btn_albums: "ALBUMS",
+    btn_favorites: "FAVORITES",
+    btn_new: "NEW",
+    search_placeholder: "Search...",
+    btn_view: "View",
+    title_edit: "Edit Memory",
+    title_new: "New Memory",
+    label_title: "Title",
+    label_location: "Location",
+    label_album_select: "No Album (General)",
+    label_add_media: "Add Photo or Video",
+    placeholder_story: "Tell the story...",
+    label_fav: "Favorite ❤️",
+    btn_save: "Save",
+    btn_back: "Back",
+    my_albums: "MY ALBUMS",
+    my_favorites: "MY FAVORITES",
+    new_album: "New Album",
+    album_name_placeholder: "Album name",
+    btn_create: "Create",
+    btn_home: "Home",
+    btn_add_here: "Add Here",
+    empty_album: "memories",
+    settings_appearance: "Appearance",
+    settings_language: "Language",
+    settings_logout: "Log out",
+    theme_wine: "Wine",
+    theme_sweet: "Sweet",
+    theme_dark: "Dark",
+  },
+};
+
 const INITIAL_MEMORY = {
   id: 1,
-  title: "Jantar em Roma",
-  date: "2023-12-22", // Data proposital para testar o Flashback se hoje for 22/12
-  description: "A melhor massa que já comemos.",
-  story:
-    "Encontramos uma pequena tratoria longe dos pontos turísticos. O vinho da casa era espetacular.",
-  location: "Roma, Itália",
+  title: "Sunset in Pipa",
+  date: "2024-12-24",
+  description: "Um dia perfeito.",
+  story: "O sol se pondo nas falésias foi inesquecível.",
+  location: "Pipa, Rio Grande do Norte",
   media:
-    "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1000&q=80",
+    "https://images.unsplash.com/photo-1621184455862-c163dfb30e0f?auto=format&fit=crop&w=1000&q=80",
   mediaType: "image",
   isFavorite: true,
   albumId: "album1",
   userId: "user1",
 };
 
-const INITIAL_ALBUMS = [{ id: "album1", title: "Viagens Europa", cover: null }];
+const INITIAL_ALBUMS = [{ id: "album1", title: "Viagens Brasil", cover: null }];
 
-// --- TOAST ---
+// --- UTILS ---
 const Toast = ({ message, type, onClose }) => {
   useEffect(() => {
-    const timer = setTimeout(onClose, 3000);
-    return () => clearTimeout(timer);
+    const t = setTimeout(onClose, 3000);
+    return () => clearTimeout(t);
   }, [onClose]);
   return (
     <div
@@ -66,13 +168,13 @@ const Toast = ({ message, type, onClose }) => {
           display: "flex",
           alignItems: "center",
           gap: 10,
-          borderLeft: `4px solid ${
-            type === "error" ? "var(--danger)" : "#2ecc71"
-          }`,
+          background: "#fff",
+          borderLeft: `4px solid ${type === "error" ? "#c0392b" : "#2ecc71"}`,
+          boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
         }}
       >
         {type === "error" ? (
-          <AlertCircle size={20} color="var(--danger)" />
+          <AlertCircle size={20} color="#c0392b" />
         ) : (
           <CheckCircle size={20} color="#2ecc71" />
         )}
@@ -82,8 +184,135 @@ const Toast = ({ message, type, onClose }) => {
   );
 };
 
-// --- AUTH ESTILO INSTAGRAM (LIMPO & COM CASAIS) ---
-const Auth = ({ onLogin }) => {
+// --- LOCATION SELECTOR ---
+const LocationSelector = ({ country, state, city, onChange }) => {
+  const [countriesList, setCountriesList] = useState([]);
+  const [statesList, setStatesList] = useState([]);
+  const [citiesList, setCitiesList] = useState([]);
+
+  useEffect(() => {
+    fetch("https://countriesnow.space/api/v0.1/countries/flag/images")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.error) {
+          const sorted = data.data.sort((a, b) => a.name.localeCompare(b.name));
+          setCountriesList(sorted);
+        }
+      })
+      .catch((err) => console.error("Erro países", err));
+  }, []);
+
+  useEffect(() => {
+    if (!country) {
+      setStatesList([]);
+      return;
+    }
+    const cObj = countriesList.find((c) => c.name === country);
+    if (cObj) {
+      fetch("https://countriesnow.space/api/v0.1/countries/states", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ country: cObj.name }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.error)
+            setStatesList(
+              data.data.states.sort((a, b) => a.name.localeCompare(b.name))
+            );
+        })
+        .catch(() => {});
+    }
+  }, [country, countriesList]);
+
+  useEffect(() => {
+    if (!country || !state) {
+      setCitiesList([]);
+      return;
+    }
+    fetch("https://countriesnow.space/api/v0.1/countries/state/cities", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ country, state }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.error)
+          setCitiesList(data.data.sort((a, b) => a.localeCompare(b)));
+      })
+      .catch(() => {});
+  }, [state, country]);
+
+  return (
+    <div className="location-grid">
+      <div>
+        <label className="editor-label">País</label>
+        <div style={{ position: "relative" }}>
+          <input
+            list="countries-data"
+            placeholder="Selecione..."
+            value={country}
+            onChange={(e) => onChange("country", e.target.value)}
+            required
+          />
+          <datalist id="countries-data">
+            {countriesList.map((c, idx) => (
+              <option key={idx} value={c.name} />
+            ))}
+          </datalist>
+          {countriesList.find((c) => c.name === country) && (
+            <img
+              src={countriesList.find((c) => c.name === country).flag}
+              alt="flag"
+              style={{
+                position: "absolute",
+                right: 0,
+                top: "50%",
+                transform: "translateY(-50%)",
+                width: 20,
+                borderRadius: 2,
+                pointerEvents: "none",
+              }}
+            />
+          )}
+        </div>
+      </div>
+      <div>
+        <label className="editor-label">Estado</label>
+        <input
+          list="states-data"
+          placeholder={country ? "Selecione..." : "..."}
+          value={state}
+          onChange={(e) => onChange("state", e.target.value)}
+          disabled={!country}
+        />
+        <datalist id="states-data">
+          {statesList.map((s, idx) => (
+            <option key={idx} value={s.name} />
+          ))}
+        </datalist>
+      </div>
+      <div>
+        <label className="editor-label">Cidade</label>
+        <input
+          list="cities-data"
+          placeholder={state ? "Selecione..." : "..."}
+          value={city}
+          onChange={(e) => onChange("city", e.target.value)}
+          disabled={!state}
+        />
+        <datalist id="cities-data">
+          {citiesList.map((c, idx) => (
+            <option key={idx} value={c} />
+          ))}
+        </datalist>
+      </div>
+    </div>
+  );
+};
+
+// --- AUTH (VISUAL PREMIUM & ELEGANTE) ---
+const Auth = ({ onLogin, t }) => {
   const [isRegister, setIsRegister] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -92,183 +321,163 @@ const Auth = ({ onLogin }) => {
   });
   const [error, setError] = useState("");
 
-  // Imagens atualizadas com foco em Casais Felizes e Momentos
   const images = [
-    "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80", // Casal abraçado feliz
-    "https://images.unsplash.com/photo-1529619768328-e37af76c6fe5?auto=format&fit=crop&w=800&q=80", // Casal urbano estilo
-    "https://images.unsplash.com/photo-1621184455862-c163dfb30e0f?auto=format&fit=crop&w=800&q=80", // Casal rindo pôr do sol
-    "https://images.unsplash.com/photo-1501901609772-df0848060b33?auto=format&fit=crop&w=800&q=80", // Viagem romântica
+    "https://images.unsplash.com/photo-1501901609772-df0848060b33?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1529619768328-e37af76c6fe5?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1621184455862-c163dfb30e0f?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=800&q=80",
   ];
-
-  const [currentImage, setCurrentImage] = useState(0);
+  const [idx, setIdx] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [images.length]);
+    const i = setInterval(() => setIdx((p) => (p + 1) % images.length), 5000);
+    return () => clearInterval(i);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
-    const storedCreds = JSON.parse(
-      localStorage.getItem("mesq_credentials") || "[]"
-    );
-
+    const stored = JSON.parse(localStorage.getItem("mesq_credentials") || "[]");
     if (isRegister) {
-      if (storedCreds.find((u) => u.email === formData.email)) {
-        setError("Este e-mail já está em uso.");
+      if (stored.find((u) => u.email === formData.email)) {
+        setError(t("error_email_use"));
         return;
       }
       const newUser = { ...formData, id: Date.now().toString() };
       localStorage.setItem(
         "mesq_credentials",
-        JSON.stringify([...storedCreds, newUser])
+        JSON.stringify([...stored, newUser])
       );
       onLogin(newUser);
     } else {
-      const user = storedCreds.find(
+      const user = stored.find(
         (u) => u.email === formData.email && u.password === formData.password
       );
       if (user) onLogin(user);
-      else setError("Senha incorreta ou usuário inexistente.");
+      else setError(t("error_login_fail"));
     }
   };
 
   return (
     <div className="auth-page fade-in">
       <div className="auth-container">
-        {/* LADO ESQUERDO: CARROSSEL DE FOTOS */}
+        {/* Lado Esquerdo: Carrossel */}
         <div className="auth-visuals">
-          {images.map((img, index) => (
+          {images.map((src, i) => (
             <img
-              key={index}
-              src={img}
-              alt="Slide"
-              className={`visual-slide ${
-                index === currentImage ? "active" : ""
-              }`}
+              key={i}
+              src={src}
+              className={`visual-slide ${i === idx ? "active" : ""}`}
+              alt="slide"
             />
           ))}
         </div>
 
-        {/* LADO DIREITO: FORMULÁRIO */}
+        {/* Lado Direito: Formulário Elegante */}
         <div className="auth-content">
-          <div
-            className="insta-box"
-            style={{ border: "none", boxShadow: "0 2px 10px rgba(0,0,0,0.05)" }}
-          >
-            {" "}
-            {/* Removida borda dura para ficar mais 'clean' */}
-            <h1
-              className="insta-logo"
-              style={{ marginBottom: "0.5rem", fontSize: "3.5rem" }}
-            >
-              Memorio
-            </h1>
-            <p
-              style={{
-                color: "#723d3dff",
-                fontSize: "17px",
-                fontWeight: "500",
-                lineHeight: "22px",
-                margin: "0 0 25px 0",
-                textAlign: "center",
-                fontFamily: "Lato, sans-serif",
-              }}
-            >
-              {isRegister
-                ? "Begin your memory journey"
-                : "Your memories, beautifully stored"}
+          <div className="insta-box">
+            <h1 className="auth-logo">Memorio</h1>
+            <p className="auth-subtitle">
+              {isRegister ? t("slogan_register") : t("slogan_login")}
             </p>
-            <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+
+            <form onSubmit={handleSubmit}>
               {isRegister && (
-                <div className="insta-input-group">
-                  <input
-                    type="text"
-                    className="insta-input"
-                    placeholder="Nome completo"
-                    required
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                  />
-                </div>
+                <input
+                  className="insta-input"
+                  placeholder={t("placeholder_name")}
+                  required
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                />
               )}
+              <input
+                type="email"
+                className="insta-input"
+                placeholder={t("placeholder_user_email")}
+                required
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+              />
+              <input
+                type="password"
+                className="insta-input"
+                placeholder={t("placeholder_password")}
+                required
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+              />
 
-              <div className="insta-input-group">
-                <input
-                  type="email"
-                  className="insta-input"
-                  placeholder="Nome de usuário ou email"
-                  required
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="insta-input-group">
-                <input
-                  type="password"
-                  className="insta-input"
-                  placeholder="Senha"
-                  required
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                />
-              </div>
-
-              <button type="submit" className="btn-insta">
-                {isRegister ? "Cadastre-se" : "Entrar"}
+              <button className="btn-insta">
+                {isRegister ? t("btn_register") : t("btn_login")}
               </button>
             </form>
+
             <div className="separator">
-              <div className="line"></div>
-              <div className="or-text">OU</div>
-              <div className="line"></div>
+              <span>{t("or")}</span>
             </div>
+
+            {/* Botão Google estilo referência */}
+            <button
+              className="btn-google"
+              onClick={() =>
+                onLogin({ name: "Google User", id: "g1", isGoogle: true })
+              }
+            >
+              {/* SVG oficial do Google */}
+              <svg width="20" height="20" viewBox="0 0 48 48">
+                <path
+                  fill="#EA4335"
+                  d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                />
+                <path
+                  fill="#4285F4"
+                  d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                />
+              </svg>
+              {t("login_google")}
+            </button>
+
             {error && (
               <p
-                style={{ color: "#ed4956", fontSize: "13px", margin: "10px 0" }}
+                style={{
+                  color: "var(--danger)",
+                  fontSize: 14,
+                  marginTop: 20,
+                  fontWeight: 600,
+                  background: "rgba(255,0,0,0.1)",
+                  padding: 10,
+                  borderRadius: 8,
+                }}
               >
                 {error}
               </p>
             )}
-            <div className="forgot-pass">Esqueceu a senha?</div>
-          </div>
 
-          <div
-            className="insta-box"
-            style={{ border: "none", boxShadow: "0 2px 10px rgba(0,0,0,0.05)" }}
-          >
-            <p className="switch-text">
-              {isRegister ? "Tem uma conta?" : "Não tem uma conta?"}{" "}
-              <span
-                className="switch-link"
-                onClick={() => {
-                  setIsRegister(!isRegister);
-                  setError("");
-                }}
-              >
-                {isRegister ? "Conecte-se" : "Cadastre-se"}
-              </span>
-            </p>
-          </div>
-
-          {/* Rodapé Simples e Elegante */}
-          <div
-            style={{
-              marginTop: "2rem",
-              textAlign: "center",
-              fontSize: "12px",
-              color: "#c7c7c7",
-              fontFamily: "sans-serif",
-            }}
-          >
-            © 2025 Memorio from You
+            <div className="auth-footer">
+              {isRegister ? t("have_account") : t("no_account")}
+              <b onClick={() => setIsRegister(!isRegister)}>
+                {isRegister ? t("connect") : t("btn_register")}
+              </b>
+            </div>
           </div>
         </div>
       </div>
@@ -276,85 +485,100 @@ const Auth = ({ onLogin }) => {
   );
 };
 
-// --- SETTINGS MENU ---
-const SettingsMenu = ({ currentTheme, onSetTheme, onLogout }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [showThemeSelect, setShowThemeSelect] = useState(false);
-  const menuRef = useRef(null);
-
+// --- SETTINGS (Dropdown) ---
+const SettingsMenu = ({ onSetTheme, onLogout, setLang, t }) => {
+  const [open, setOpen] = useState(false);
+  const [sub, setSub] = useState("");
+  const ref = useRef(null);
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsOpen(false);
-        setShowThemeSelect(false);
+    const fn = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setOpen(false);
+        setSub("");
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", fn);
+    return () => document.removeEventListener("mousedown", fn);
   }, []);
 
   return (
-    <div className="settings-container" ref={menuRef}>
-      <button
-        className={`btn-icon ${isOpen ? "active" : ""}`}
-        style={{ width: 45, height: 45, background: "var(--bg-glass)" }}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <Settings size={24} />
+    <div style={{ position: "relative" }} ref={ref}>
+      <button className="btn-icon" onClick={() => setOpen(!open)}>
+        <Settings size={20} />
       </button>
-      {isOpen && (
+      {open && (
         <div className="dropdown-menu">
           <div
             className="menu-item"
-            onClick={() => setShowThemeSelect(!showThemeSelect)}
+            onClick={() => setSub(sub === "theme" ? "" : "theme")}
           >
-            <Palette size={18} /> Aparência{" "}
-            {showThemeSelect ? (
+            <Palette size={16} /> {t("settings_appearance")}{" "}
+            {sub === "theme" ? (
               <ChevronDown size={14} />
             ) : (
               <ChevronRight size={14} />
             )}
           </div>
-          {showThemeSelect && (
+          {sub === "theme" && (
             <div style={{ display: "flex", gap: 5, padding: "5px 10px" }}>
-              {["wine", "sweet", "dark"].map((t) => (
+              {["wine", "sweet", "dark"].map((th) => (
                 <div
-                  key={t}
-                  onClick={() => onSetTheme(t)}
+                  key={th}
+                  onClick={() => onSetTheme(th)}
                   style={{
-                    width: 25,
-                    height: 25,
+                    width: 20,
+                    height: 20,
                     borderRadius: "50%",
-                    cursor: "pointer",
-                    border:
-                      currentTheme === t
-                        ? "2px solid var(--text-main)"
-                        : "1px solid #ccc",
                     background:
-                      t === "wine"
+                      th === "wine"
                         ? "#800020"
-                        : t === "sweet"
+                        : th === "sweet"
                         ? "#ffb7c5"
                         : "#333",
+                    border: "1px solid #ccc",
+                    cursor: "pointer",
                   }}
-                  title={t}
+                  title={t(`theme_${th}`)}
                 />
               ))}
             </div>
           )}
-          <div
-            style={{
-              height: 1,
-              background: "var(--border-glass)",
-              margin: "5px 0",
-            }}
-          ></div>
+
           <div
             className="menu-item"
-            onClick={onLogout}
-            style={{ color: "var(--danger)" }}
+            onClick={() => setSub(sub === "lang" ? "" : "lang")}
           >
-            <LogOut size={18} /> Sair
+            <Globe size={16} /> {t("settings_language")}{" "}
+            {sub === "lang" ? (
+              <ChevronDown size={14} />
+            ) : (
+              <ChevronRight size={14} />
+            )}
+          </div>
+          {sub === "lang" && (
+            <div style={{ padding: "5px 10px", fontSize: 12 }}>
+              <div
+                onClick={() => setLang("pt")}
+                style={{ cursor: "pointer", fontWeight: 700 }}
+              >
+                Português
+              </div>
+              <div
+                onClick={() => setLang("en")}
+                style={{ cursor: "pointer", fontWeight: 700 }}
+              >
+                English
+              </div>
+            </div>
+          )}
+
+          <div style={{ height: 1, background: "#eee", margin: "5px 0" }}></div>
+          <div
+            className="menu-item"
+            style={{ color: "var(--danger)" }}
+            onClick={onLogout}
+          >
+            <LogOut size={16} /> {t("settings_logout")}
           </div>
         </div>
       )}
@@ -362,278 +586,86 @@ const SettingsMenu = ({ currentTheme, onSetTheme, onLogout }) => {
   );
 };
 
-// --- FORM ---
-const MemoryForm = ({
-  onSave,
-  onCancel,
-  initialData,
-  albums,
-  preSelectedAlbumId,
-}) => {
-  const [formData, setFormData] = useState(
-    initialData || {
-      title: "",
-      date: new Date().toISOString().split("T")[0],
-      description: "",
-      story: "",
-      location: "",
-      isFavorite: false,
-      media: null,
-      mediaType: "image",
-      albumId: preSelectedAlbumId || "",
-    }
-  );
-
-  const handleFile = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) return alert("Arquivo máx 5MB.");
-    const reader = new FileReader();
-    reader.onloadend = () =>
-      setFormData({
-        ...formData,
-        media: reader.result,
-        mediaType: file.type.startsWith("video/") ? "video" : "image",
-      });
-    reader.readAsDataURL(file);
-  };
+// --- HERO STRIP ---
+const HeroStrip = ({ memories, onSelect }) => {
+  const displayItems = [...memories].slice(0, 3);
+  while (displayItems.length < 3) {
+    displayItems.push({
+      id: "placeholder-" + displayItems.length,
+      media:
+        "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1000&q=80",
+      title: "Memorio",
+      isPlaceholder: true,
+    });
+  }
 
   return (
-    <div className="container fade-in">
-      <button
-        onClick={onCancel}
-        className="btn-icon"
-        style={{
-          width: "fit-content",
-          borderRadius: "20px",
-          paddingRight: "15px",
-          gap: "5px",
-          marginBottom: "1rem",
-        }}
-      >
-        <ArrowLeft size={18} /> Voltar
-      </button>
-      <div
-        className="glass-panel"
-        style={{ padding: "2.5rem", maxWidth: "800px", margin: "0 auto" }}
-      >
-        <h2
-          style={{
-            textAlign: "center",
-            marginBottom: "2rem",
-            fontFamily: "Cinzel",
-          }}
+    <div className="hero-strip fade-in">
+      {displayItems.map((item, idx) => (
+        <div
+          key={item.id}
+          className="hero-item"
+          onClick={() => !item.isPlaceholder && onSelect(item)}
         >
-          {initialData ? "Editar Memória" : "Nova Memória"}
-        </h2>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSave(formData);
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Título"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              required
-            />
-            <input
-              type="date"
-              value={formData.date}
-              onChange={(e) =>
-                setFormData({ ...formData, date: e.target.value })
-              }
-              required
-            />
+          {item.mediaType === "video" ? (
+            <video src={item.media} className="hero-img" muted />
+          ) : (
+            <img src={item.media} className="hero-img" alt={item.title} />
+          )}
+          <div className="hero-overlay">
+            <span className="hero-text">{item.title}</span>
           </div>
-
-          <div style={{ position: "relative", marginBottom: "1rem" }}>
-            <MapPin
-              size={18}
-              style={{
-                position: "absolute",
-                left: 12,
-                top: 14,
-                color: "var(--text-muted)",
-              }}
-            />
-            <input
-              type="text"
-              placeholder="Localização (ex: Paris, França)"
-              value={formData.location}
-              onChange={(e) =>
-                setFormData({ ...formData, location: e.target.value })
-              }
-              style={{ paddingLeft: 40, margin: 0 }}
-            />
-          </div>
-
-          <select
-            value={formData.albumId}
-            onChange={(e) =>
-              setFormData({ ...formData, albumId: e.target.value })
-            }
-          >
-            <option value="">Sem Álbum (Geral)</option>
-            {albums.map((alb) => (
-              <option key={alb.id} value={alb.id}>
-                {alb.title}
-              </option>
-            ))}
-          </select>
-
-          <div
-            style={{
-              border: "2px dashed var(--border-glass)",
-              borderRadius: "8px",
-              padding: "2rem",
-              textAlign: "center",
-              marginBottom: "1.5rem",
-              background: "rgba(0,0,0,0.02)",
-            }}
-          >
-            <input
-              type="file"
-              id="media-up"
-              accept="image/*,video/*"
-              style={{ display: "none" }}
-              onChange={handleFile}
-            />
-            <label
-              htmlFor="media-up"
-              style={{ cursor: "pointer", display: "block" }}
-            >
-              {formData.media ? (
-                formData.mediaType === "video" ? (
-                  <video
-                    src={formData.media}
-                    controls
-                    style={{
-                      maxWidth: "100%",
-                      maxHeight: "300px",
-                      borderRadius: "8px",
-                    }}
-                  />
-                ) : (
-                  <img
-                    src={formData.media}
-                    alt="Preview"
-                    style={{
-                      maxWidth: "100%",
-                      maxHeight: "300px",
-                      borderRadius: "8px",
-                      filter: "sepia(20%)",
-                    }}
-                  />
-                )
-              ) : (
-                <div style={{ color: "var(--text-muted)" }}>
-                  <ImageIcon size={40} />
-                  <br />
-                  Adicionar Foto ou Vídeo
-                </div>
-              )}
-            </label>
-          </div>
-
-          <textarea
-            rows="4"
-            placeholder="Conte a história..."
-            value={formData.story}
-            onChange={(e) =>
-              setFormData({ ...formData, story: e.target.value })
-            }
-          ></textarea>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              marginBottom: "1.5rem",
-            }}
-          >
-            <input
-              type="checkbox"
-              id="fav"
-              checked={formData.isFavorite}
-              onChange={(e) =>
-                setFormData({ ...formData, isFavorite: e.target.checked })
-              }
-              style={{ width: "auto", margin: 0 }}
-            />
-            <label
-              htmlFor="fav"
-              style={{ color: "var(--danger)", fontWeight: "bold" }}
-            >
-              Marcar como Favorito ❤️
-            </label>
-          </div>
-          <button
-            type="submit"
-            className="btn-primary"
-            style={{ width: "100%" }}
-          >
-            Salvar no Álbum
-          </button>
-        </form>
-      </div>
+        </div>
+      ))}
     </div>
   );
 };
 
-// --- FLASHBACK WIDGET ---
-const FlashbackWidget = ({ memories, onSelect }) => {
-  const today = new Date();
-  const flashbackMemories = memories.filter((m) => {
-    const mDate = new Date(m.date);
-    // Mesmo dia e mês, mas ano diferente (ou mesmo ano se for hoje)
-    return (
-      mDate.getDate() === today.getDate() &&
-      mDate.getMonth() === today.getMonth()
-    );
-  });
-
-  if (flashbackMemories.length === 0) return null;
-
-  return (
-    <div className="flashback-widget fade-in">
-      <div style={{ minWidth: "60px", textAlign: "center" }}>
-        <Calendar size={32} color="var(--primary)" />
-      </div>
-      <div className="flashback-content">
-        <span className="flashback-badge">Neste Dia</span>
-        <h3 style={{ margin: 0, fontSize: "1.2rem" }}>
-          Você tem {flashbackMemories.length} memória(s) de{" "}
-          {today.toLocaleDateString().slice(0, 5)}!
-        </h3>
-        <p style={{ fontSize: "0.9rem", color: "var(--text-muted)" }}>
-          Relembre o que aconteceu hoje em outros anos.
-        </p>
-      </div>
-      <button
-        className="btn-primary"
-        onClick={() => onSelect(flashbackMemories[0])}
-        style={{ fontSize: "0.8rem" }}
-      >
-        Ver
-      </button>
+// --- HEADER (REUSÁVEL) ---
+// ATUALIZADO: Recebe search e setSearch, e renderiza a busca antes do SettingsMenu
+const Header = ({
+  onNew,
+  onViewAlbums,
+  onViewFavorites,
+  onViewHome,
+  settingsProps,
+  t,
+  search,
+  setSearch,
+}) => (
+  <header className="site-header">
+    <div className="header-brand" onClick={onViewHome}>
+      Memorio
     </div>
-  );
-};
+    <nav className="header-nav hidden-mobile">
+      <span className="nav-link" onClick={onNew}>
+        {t("btn_new")}
+      </span>
+      <span className="nav-link" onClick={onViewAlbums}>
+        {t("btn_albums")}
+      </span>
+      <span className="nav-link" onClick={onViewFavorites}>
+        {t("btn_favorites")}
+      </span>
+    </nav>
+    <div className="header-actions">
+      {/* Barra de Pesquisa aqui */}
+      <div className="search-box" style={{ marginRight: "1rem" }}>
+        <input
+          type="text"
+          placeholder={t("search_placeholder")}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <Search size={18} color="var(--text-muted)" />
+      </div>
+      {/* Botão de Configurações aqui */}
+      <SettingsMenu {...settingsProps} />
+    </div>
+  </header>
+);
 
-// --- DASHBOARD (POLAROID GRID) ---
+// --- DASHBOARD ---
 const Dashboard = ({
   user,
   memories,
@@ -641,6 +673,9 @@ const Dashboard = ({
   onSelect,
   onDelete,
   onViewAlbums,
+  onViewFavorites,
+  t,
+  settingsProps,
 }) => {
   const [search, setSearch] = useState("");
   const filtered = memories.filter(
@@ -650,145 +685,84 @@ const Dashboard = ({
   );
 
   return (
-    <div className="container fade-in">
-      <header
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "2rem",
-        }}
-      >
-        <div>
-          <h2 style={{ fontSize: "2rem" }}>Olá, {user.name.split(" ")[0]}</h2>
-          <p style={{ color: "var(--text-muted)" }}>
-            Suas memórias estão aqui.
-          </p>
+    <div style={{ minHeight: "100vh", paddingBottom: 50 }}>
+      {/* Passando search e setSearch para o Header */}
+      <Header
+        onNew={onNew}
+        onViewAlbums={onViewAlbums}
+        onViewFavorites={onViewFavorites}
+        onViewHome={() => {}}
+        settingsProps={settingsProps}
+        t={t}
+        search={search}
+        setSearch={setSearch}
+      />
+      <HeroStrip memories={memories} onSelect={onSelect} />
+      <div className="container">
+        <div className="section-divider">
+          <div className="divider-line"></div>
+          <h2 className="section-title">
+            {t("hello")}, {user.name.split(" ")[0]}
+          </h2>
+          <p className="section-subtitle">{t("subtitle_dash")}</p>
         </div>
-        <div style={{ display: "flex", gap: "10px" }}>
-          <button onClick={onViewAlbums} className="btn-icon" title="Álbuns">
-            <Folder size={20} />{" "}
-            <span className="hide-mobile" style={{ marginLeft: 5 }}>
-              Álbuns
-            </span>
-          </button>
-          <button onClick={onNew} className="btn-primary">
-            <Plus size={20} /> Nova
-          </button>
-        </div>
-      </header>
-
-      {/* FLASHBACK SECTION */}
-      <FlashbackWidget memories={memories} onSelect={onSelect} />
-
-      <div
-        className="glass-panel"
-        style={{
-          padding: "1rem",
-          display: "flex",
-          gap: "10px",
-          marginBottom: "2rem",
-        }}
-      >
-        <Search size={20} color="var(--text-muted)" />
-        <input
-          type="text"
-          placeholder="Buscar por título ou local..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{ margin: 0, border: "none", background: "transparent" }}
-        />
-      </div>
-
-      {/* POLAROID GRID */}
-      <div className="grid">
-        {filtered.map((mem) => {
-          // Rotação determinística baseada no ID (não muda no re-render)
-          const rotation = (parseInt(mem.id) % 6) - 3; // Gera valores entre -3 e 2 graus
-
-          return (
+        {/* Barra de busca removida daqui */}
+        <div className="grid-polaroid">
+          {filtered.map((mem, i) => (
             <div
               key={mem.id}
-              className="memory-card"
+              className="polaroid-card"
               onClick={() => onSelect(mem)}
-              style={{ transform: `rotate(${rotation}deg)` }}
+              style={{
+                transform: `rotate(${
+                  (i % 2 === 0 ? 1 : -1) * (Math.random() * 2)
+                }deg)`,
+              }}
             >
-              <div style={{ position: "relative" }}>
-                {mem.mediaType === "video" ? (
-                  <div
-                    style={{
-                      position: "relative",
-                      height: "100%",
-                      aspectRatio: "1/1",
-                      background: "#000",
-                      marginBottom: 10,
-                    }}
-                  >
-                    <video
-                      src={mem.media}
-                      className="card-media"
-                      style={{ marginBottom: 0, border: "none" }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: "rgba(0,0,0,0.2)",
-                      }}
-                    >
-                      <PlayCircle size={40} color="white" />
-                    </div>
-                  </div>
-                ) : (
-                  <img
-                    src={mem.media || "https://via.placeholder.com/300"}
-                    className="card-media"
-                    alt={mem.title}
-                  />
-                )}
-                {mem.isFavorite && (
-                  <Heart
-                    size={20}
-                    fill="#c0392b"
-                    color="#c0392b"
-                    style={{
-                      position: "absolute",
-                      top: 10,
-                      right: 10,
-                      zIndex: 2,
-                    }}
-                  />
-                )}
-              </div>
-
-              <div className="card-content">
-                <h3 className="card-title">{mem.title}</h3>
+              {mem.mediaType === "video" ? (
                 <div
                   style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 8,
-                    marginTop: 5,
+                    position: "relative",
+                    width: "100%",
+                    aspectRatio: "1/1",
+                    background: "#000",
+                    marginBottom: 15,
                   }}
                 >
-                  <span className="card-date">
-                    {new Date(mem.date).toLocaleDateString()}
-                  </span>
-                  {mem.location && (
-                    <span
-                      className="card-date"
-                      style={{ display: "flex", alignItems: "center", gap: 3 }}
-                    >
-                      • <MapPin size={10} /> {mem.location}
-                    </span>
-                  )}
+                  <video
+                    src={mem.media}
+                    className="polaroid-img"
+                    style={{ marginBottom: 0, border: "none", height: "100%" }}
+                    muted
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <PlayCircle color="#fff" />
+                  </div>
                 </div>
+              ) : (
+                <img src={mem.media} className="polaroid-img" alt={mem.title} />
+              )}
+              <div className="polaroid-caption">{mem.title}</div>
+              <div className="polaroid-meta">
+                {new Date(mem.date).toLocaleDateString()}
+                {mem.location && <span> • {mem.location.split(",")[0]}</span>}
               </div>
-
+              {mem.isFavorite && (
+                <Heart
+                  size={16}
+                  fill="var(--primary)"
+                  color="var(--primary)"
+                  style={{ position: "absolute", top: 10, right: 10 }}
+                />
+              )}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -801,233 +775,313 @@ const Dashboard = ({
                   background: "#fff",
                   border: "1px solid #ccc",
                   borderRadius: "50%",
-                  padding: 5,
-                  color: "var(--text-muted)",
+                  width: 25,
+                  height: 25,
                   cursor: "pointer",
-                  boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+                  color: "var(--text-muted)",
                 }}
               >
-                <Trash2 size={14} />
+                <Trash2 size={12} />
               </button>
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
-// --- ÁLBUNS VIEW ---
-const AlbumsView = ({ albums, onSelectAlbum, onCreateAlbum }) => {
-  const [newAlbumName, setNewAlbumName] = useState("");
-  const [isCreating, setIsCreating] = useState(false);
+// --- FAVORITES VIEW ---
+const FavoritesView = ({
+  memories,
+  onSelect,
+  onNew,
+  onViewAlbums,
+  onViewHome,
+  onViewFavorites,
+  t,
+  settingsProps,
+}) => {
+  // Estado de busca local para favoritos
+  const [search, setSearch] = useState("");
+  const favorites = memories.filter((m) => m.isFavorite);
+  const filteredFavorites = favorites.filter(
+    (m) =>
+      m.title.toLowerCase().includes(search.toLowerCase()) ||
+      (m.location && m.location.toLowerCase().includes(search.toLowerCase()))
+  );
+
   return (
-    <div className="container fade-in">
-      <h2 style={{ fontSize: "2.5rem", marginBottom: "2rem" }}>Meus Álbuns</h2>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-          gap: "2rem",
-        }}
-      >
-        <div
-          className="glass-panel"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            minHeight: 250,
-            cursor: "pointer",
-            border: "2px dashed var(--border-glass)",
-          }}
-          onClick={() => setIsCreating(true)}
-        >
-          {!isCreating ? (
-            <>
-              <Plus size={40} color="var(--primary)" />
-              <p>Novo Álbum</p>
-            </>
-          ) : (
-            <div
-              style={{ padding: "1rem", width: "100%" }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <input
-                autoFocus
-                placeholder="Nome"
-                value={newAlbumName}
-                onChange={(e) => setNewAlbumName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && newAlbumName) {
-                    onCreateAlbum(newAlbumName);
-                    setNewAlbumName("");
-                    setIsCreating(false);
-                  }
-                }}
-              />
-              <button
-                className="btn-primary"
-                onClick={() => {
-                  if (newAlbumName) {
-                    onCreateAlbum(newAlbumName);
-                    setNewAlbumName("");
-                    setIsCreating(false);
-                  }
+    <div style={{ minHeight: "100vh", paddingBottom: 50 }}>
+      {/* Header com busca funcional para favoritos */}
+      <Header
+        onNew={onNew}
+        onViewAlbums={onViewAlbums}
+        onViewFavorites={onViewFavorites}
+        onViewHome={onViewHome}
+        settingsProps={settingsProps}
+        t={t}
+        search={search}
+        setSearch={setSearch}
+      />
+      <div className="container fade-in" style={{ paddingTop: "3rem" }}>
+        <div className="section-divider">
+          <div className="divider-line"></div>
+          <h2 className="section-title">{t("my_favorites")}</h2>
+          <p className="section-subtitle">
+            {favorites.length} {t("empty_album")}
+          </p>
+        </div>
+        {filteredFavorites.length === 0 ? (
+          <div
+            style={{
+              textAlign: "center",
+              color: "var(--text-muted)",
+              marginTop: "3rem",
+            }}
+          >
+            <Heart size={48} style={{ opacity: 0.2, marginBottom: 10 }} />
+            <p>
+              {favorites.length === 0
+                ? "Você ainda não tem favoritos."
+                : "Nenhum favorito encontrado para sua busca."}
+            </p>
+          </div>
+        ) : (
+          <div className="grid-polaroid">
+            {filteredFavorites.map((mem, i) => (
+              <div
+                key={mem.id}
+                className="polaroid-card"
+                onClick={() => onSelect(mem)}
+                style={{
+                  transform: `rotate(${
+                    (i % 2 === 0 ? 1 : -1) * (Math.random() * 2)
+                  }deg)`,
                 }}
               >
-                Criar
-              </button>
-            </div>
-          )}
+                <img src={mem.media} className="polaroid-img" alt={mem.title} />
+                <div className="polaroid-caption">{mem.title}</div>
+                <div className="polaroid-meta">
+                  {new Date(mem.date).toLocaleDateString()}
+                </div>
+                <Heart
+                  size={16}
+                  fill="var(--primary)"
+                  color="var(--primary)"
+                  style={{ position: "absolute", top: 10, right: 10 }}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// --- FORMULÁRIO ---
+const MemoryForm = ({
+  onSave,
+  onCancel,
+  initialData,
+  albums,
+  preSelectedAlbumId,
+  t,
+}) => {
+  const parseLoc = (s) => {
+    if (!s) return { c: "", s: "", ci: "" };
+    const p = s.split(",").map((x) => x.trim());
+    if (p.length >= 3) return { ci: p[0], s: p[1], c: p[2] };
+    return { c: s, s: "", ci: "" };
+  };
+  const [fd, setFd] = useState(
+    initialData || {
+      title: "",
+      date: new Date().toISOString().split("T")[0],
+      description: "",
+      story: "",
+      location: "",
+      isFavorite: false,
+      media: null,
+      mediaType: "image",
+      albumId: preSelectedAlbumId || "",
+    }
+  );
+  const [loc, setLoc] = useState(parseLoc(initialData?.location));
+
+  const handleFile = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onloadend = () =>
+      setFd({
+        ...fd,
+        media: r.result,
+        mediaType: f.type.startsWith("video/") ? "video" : "image",
+      });
+    r.readAsDataURL(f);
+  };
+  const sub = (e) => {
+    e.preventDefault();
+    onSave({
+      ...fd,
+      location: [loc.city, loc.state, loc.country].filter(Boolean).join(", "),
+    });
+  };
+
+  return (
+    <div
+      className="container fade-in"
+      style={{ paddingTop: "4rem", paddingBottom: "4rem" }}
+    >
+      <div className="editor-container">
+        <div style={{ position: "absolute", top: 20, right: 20 }}>
+          <button onClick={onCancel} className="btn-icon">
+            <X size={24} />
+          </button>
         </div>
-        {albums.map((album) => (
-          <div
-            key={album.id}
-            className="glass-panel"
-            style={{
-              overflow: "hidden",
-              cursor: "pointer",
-              minHeight: 250,
-              position: "relative",
-            }}
-            onClick={() => onSelectAlbum(album)}
-          >
-            <img
-              src={
-                album.cover ||
-                "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
-              }
+        <h2 className="editor-title">
+          {initialData ? t("title_edit") : t("title_new")}
+        </h2>
+        <form onSubmit={sub}>
+          <div className="editor-grid">
+            <div>
+              <label className="editor-label">{t("label_title")}</label>
+              <input
+                className="editor-input"
+                value={fd.title}
+                onChange={(e) => setFd({ ...fd, title: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <label className="editor-label">Data</label>
+              <input
+                type="date"
+                className="editor-input"
+                value={fd.date}
+                onChange={(e) => setFd({ ...fd, date: e.target.value })}
+                required
+              />
+            </div>
+          </div>
+          <div style={{ marginBottom: "2rem" }}>
+            <LocationSelector
+              country={loc.country}
+              state={loc.state}
+              city={loc.city}
+              onChange={(k, v) => setLoc({ ...loc, [k]: v })}
+            />
+          </div>
+          <div style={{ marginBottom: "2rem" }}>
+            <label className="editor-label">Álbum</label>
+            <select
+              className="editor-input"
+              value={fd.albumId}
+              onChange={(e) => setFd({ ...fd, albumId: e.target.value })}
+              style={{ background: "transparent" }}
+            >
+              <option value="">{t("label_album_select")}</option>
+              {albums.map((alb) => (
+                <option key={alb.id} value={alb.id}>
+                  {alb.title}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="editor-upload">
+            <input
+              type="file"
+              id="up"
+              style={{ display: "none" }}
+              onChange={handleFile}
+              accept="image/*,video/*"
+            />
+            <label
+              htmlFor="up"
               style={{
                 width: "100%",
                 height: "100%",
-                objectFit: "cover",
-                filter: "brightness(0.8)",
-              }}
-              alt={album.title}
-            />
-            <div
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                right: 0,
-                padding: "1rem",
-                background:
-                  "linear-gradient(to top, rgba(0,0,0,0.8), transparent)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
               }}
             >
-              <h3 style={{ color: "#fff", margin: 0 }}>{album.title}</h3>
-            </div>
+              {fd.media ? (
+                fd.mediaType === "video" ? (
+                  <video src={fd.media} controls className="upload-preview" />
+                ) : (
+                  <img
+                    src={fd.media}
+                    alt="Preview"
+                    className="upload-preview"
+                  />
+                )
+              ) : (
+                <div className="upload-placeholder">
+                  <div
+                    style={{
+                      background: "var(--bg-body)",
+                      padding: 15,
+                      borderRadius: "50%",
+                      border: "1px solid #ddd",
+                      display: "inline-block",
+                      marginBottom: 10,
+                    }}
+                  >
+                    <ImageIcon size={32} color="var(--primary)" />
+                  </div>
+                  <p style={{ margin: 0, fontWeight: 500 }}>
+                    {t("label_add_media")}
+                  </p>
+                </div>
+              )}
+            </label>
           </div>
-        ))}
+          <div style={{ marginBottom: "1rem" }}>
+            <label className="editor-label">História</label>
+            <textarea
+              className="editor-textarea"
+              placeholder={t("placeholder_story")}
+              value={fd.story}
+              onChange={(e) => setFd({ ...fd, story: e.target.value })}
+            />
+          </div>
+          <div
+            className="editor-checkbox-wrapper"
+            onClick={() => setFd({ ...fd, isFavorite: !fd.isFavorite })}
+          >
+            <input
+              type="checkbox"
+              className="editor-checkbox"
+              checked={fd.isFavorite}
+              readOnly
+            />
+            <span
+              style={{
+                fontSize: "0.9rem",
+                fontWeight: 600,
+                color: fd.isFavorite ? "var(--danger)" : "var(--text-main)",
+              }}
+            >
+              {t("label_fav")}
+            </span>
+          </div>
+          <button
+            className="btn-primary"
+            style={{ width: "100%", padding: "15px", fontSize: "1rem" }}
+          >
+            {t("btn_save")}
+          </button>
+        </form>
       </div>
     </div>
   );
 };
 
-// --- DETAIL VIEW ---
-const MemoryDetail = ({ memory, onBack, onEdit }) => (
-  <div className="container fade-in">
-    <button
-      onClick={onBack}
-      className="btn-icon"
-      style={{
-        width: "fit-content",
-        borderRadius: "20px",
-        paddingRight: "15px",
-        gap: "5px",
-        marginBottom: "1rem",
-      }}
-    >
-      <ArrowLeft size={18} /> Voltar
-    </button>
-    <div
-      className="glass-panel"
-      style={{ overflow: "hidden", paddingBottom: "2rem" }}
-    >
-      <div
-        style={{
-          background: "#111",
-          textAlign: "center",
-          width: "100%",
-          minHeight: "300px",
-        }}
-      >
-        {memory.mediaType === "video" ? (
-          <video
-            src={memory.media}
-            controls
-            style={{ maxHeight: "60vh", maxWidth: "100%" }}
-          />
-        ) : (
-          <img
-            src={memory.media}
-            alt="Memoria"
-            style={{
-              maxHeight: "60vh",
-              maxWidth: "100%",
-              objectFit: "contain",
-            }}
-          />
-        )}
-      </div>
-      <div
-        style={{ padding: "2rem 3rem", maxWidth: "800px", margin: "0 auto" }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: "3rem",
-              fontFamily: "Dancing Script",
-              marginBottom: "0.5rem",
-            }}
-          >
-            {memory.title}
-          </h1>
-          <button onClick={() => onEdit(memory)} className="btn-icon">
-            <Edit2 size={20} />
-          </button>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            gap: 15,
-            color: "var(--text-muted)",
-            marginBottom: "2rem",
-            fontSize: "0.9rem",
-            textTransform: "uppercase",
-            letterSpacing: 1,
-          }}
-        >
-          <span>{new Date(memory.date).toLocaleDateString()}</span>
-          {memory.location && <span>• {memory.location}</span>}
-        </div>
-
-        <p
-          style={{
-            fontSize: "1.2rem",
-            lineHeight: "1.8",
-            whiteSpace: "pre-line",
-            fontFamily: "Lato",
-          }}
-        >
-          {memory.story || memory.description}
-        </p>
-      </div>
-    </div>
-  </div>
-);
-
-// --- APP ---
+// --- APP PRINCIPAL ---
 function App() {
   const [user, setUser] = useState(null);
   const [view, setView] = useState("dashboard");
@@ -1040,11 +1094,17 @@ function App() {
   const [theme, setTheme] = useState(
     localStorage.getItem("mesq_theme") || "wine"
   );
+  const [lang, setLang] = useState(localStorage.getItem("mesq_lang") || "pt");
+
+  const t = (key) => TRANSLATIONS[lang][key] || key;
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("mesq_theme", theme);
   }, [theme]);
+  useEffect(() => {
+    localStorage.setItem("mesq_lang", lang);
+  }, [lang]);
 
   useEffect(() => {
     const u = localStorage.getItem("mesq_active_session");
@@ -1082,8 +1142,6 @@ function App() {
         m.id === editingMemory.id ? { ...data, id: m.id } : m
       );
     else updated = [{ ...data, id: Date.now(), userId: user.id }, ...memories];
-
-    // Auto-Set Album Cover
     if (data.albumId && data.mediaType === "image") {
       const idx = albums.findIndex((a) => a.id === data.albumId);
       if (idx >= 0 && !albums[idx].cover) {
@@ -1094,12 +1152,12 @@ function App() {
       }
     }
     saveMemories(updated);
-    setNotification({ message: "Salvo com sucesso!", type: "success" });
+    setNotification({ message: "Salvo!", type: "success" });
     setEditingMemory(null);
     setView(currentAlbum ? "album-detail" : "dashboard");
   };
   const handleDelete = (id) => {
-    if (window.confirm("Excluir memória?")) {
+    if (window.confirm("Excluir?")) {
       saveMemories(memories.filter((m) => m.id !== id));
       setNotification({ message: "Excluída.", type: "error" });
     }
@@ -1108,6 +1166,13 @@ function App() {
   const displayedMemories = currentAlbum
     ? memories.filter((m) => m.albumId === currentAlbum.id)
     : memories;
+
+  const settingsProps = {
+    onSetTheme: setTheme,
+    onLogout: handleLogout,
+    setLang,
+    t,
+  };
 
   return (
     <div className="app-wrapper">
@@ -1118,16 +1183,11 @@ function App() {
           onClose={() => setNotification(null)}
         />
       )}
+
       {!user ? (
-        <Auth onLogin={handleLogin} />
+        <Auth onLogin={handleLogin} t={t} />
       ) : (
         <>
-          <SettingsMenu
-            currentTheme={theme}
-            onSetTheme={setTheme}
-            onLogout={handleLogout}
-          />
-
           {view === "dashboard" && (
             <Dashboard
               user={user}
@@ -1143,90 +1203,142 @@ function App() {
               }}
               onDelete={handleDelete}
               onViewAlbums={() => setView("albums")}
+              onViewFavorites={() => setView("favorites")}
+              t={t}
+              settingsProps={settingsProps}
+            />
+          )}
+
+          {view === "favorites" && (
+            <FavoritesView
+              memories={memories}
+              onSelect={(m) => {
+                setSelectedMemory(m);
+                setView("detail");
+              }}
+              onNew={() => {
+                setEditingMemory(null);
+                setCurrentAlbum(null);
+                setView("create");
+              }}
+              onViewAlbums={() => setView("albums")}
+              onViewFavorites={() => setView("favorites")}
+              onViewHome={() => setView("dashboard")}
+              t={t}
+              settingsProps={settingsProps}
             />
           )}
 
           {view === "albums" && (
-            <div className="container fade-in">
-              <button
-                onClick={() => setView("dashboard")}
-                className="btn-icon"
-                style={{
-                  marginBottom: 15,
-                  width: "fit-content",
-                  paddingRight: 15,
-                  gap: 5,
-                  borderRadius: 20,
-                }}
-              >
-                <ArrowLeft size={18} /> Início
-              </button>
-              <AlbumsView
-                albums={albums}
-                onCreateAlbum={handleCreateAlbum}
-                onSelectAlbum={(alb) => {
-                  setCurrentAlbum(alb);
-                  setView("album-detail");
-                }}
-              />
-            </div>
-          )}
-
-          {view === "album-detail" && currentAlbum && (
-            <div className="container fade-in">
+            <div className="container fade-in" style={{ paddingTop: "2rem" }}>
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
-                  marginBottom: "2rem",
+                  alignItems: "center",
+                  marginBottom: 30,
                 }}
               >
                 <button
-                  onClick={() => setView("albums")}
+                  onClick={() => setView("dashboard")}
                   className="btn-icon"
+                >
+                  <ArrowLeft /> {t("btn_home")}
+                </button>
+                <h2 style={{ fontFamily: "Cinzel", fontSize: "2rem" }}>
+                  {t("my_albums")}
+                </h2>
+                <div style={{ width: 80 }}></div>
+              </div>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+                  gap: "2rem",
+                }}
+              >
+                <div
+                  onClick={() => {
+                    const n = prompt(t("album_name_placeholder"));
+                    if (n) handleCreateAlbum(n);
+                  }}
                   style={{
-                    width: "fit-content",
-                    paddingRight: 15,
-                    gap: 5,
-                    borderRadius: 20,
+                    border: "2px dashed var(--border-light)",
+                    borderRadius: 4,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: 300,
+                    cursor: "pointer",
                   }}
                 >
-                  <ArrowLeft size={18} /> Álbuns
+                  <Plus size={40} color="var(--primary)" />{" "}
+                  <p>{t("new_album")}</p>
+                </div>
+                {albums.map((a) => (
+                  <div
+                    key={a.id}
+                    className="polaroid-card"
+                    onClick={() => {
+                      setCurrentAlbum(a);
+                      setView("album-detail");
+                    }}
+                    style={{ minHeight: 300, transform: "rotate(0deg)" }}
+                  >
+                    <img
+                      src={
+                        a.cover ||
+                        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
+                      }
+                      className="polaroid-img"
+                      style={{ height: 250 }}
+                    />
+                    <div className="polaroid-caption">{a.title}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {view === "album-detail" && currentAlbum && (
+            <div className="container fade-in" style={{ paddingTop: "2rem" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: 30,
+                }}
+              >
+                <button onClick={() => setView("albums")} className="btn-icon">
+                  <ArrowLeft /> {t("btn_albums")}
                 </button>
+                <h1 style={{ fontFamily: "Cinzel", fontSize: "2.5rem" }}>
+                  {currentAlbum.title}
+                </h1>
                 <button
-                  className="btn-primary"
                   onClick={() => {
                     setEditingMemory(null);
                     setView("create");
                   }}
+                  className="btn-primary"
                 >
-                  <Plus size={18} /> Adicione Aqui
+                  <Plus size={16} /> {t("btn_add_here")}
                 </button>
               </div>
-              <h1 style={{ textAlign: "center", fontSize: "3rem" }}>
-                {currentAlbum.title}
-              </h1>
-              <div className="grid">
+              <div className="grid-polaroid">
                 {displayedMemories.map((mem) => (
                   <div
                     key={mem.id}
-                    className="memory-card"
+                    className="polaroid-card"
                     onClick={() => {
                       setSelectedMemory(mem);
                       setView("detail");
                     }}
-                    style={{
-                      transform: `rotate(${(parseInt(mem.id) % 6) - 3}deg)`,
-                    }}
                   >
-                    <img
-                      src={mem.media}
-                      className="card-media"
-                      alt={mem.title}
-                    />
-                    <div className="card-content">
-                      <h3 className="card-title">{mem.title}</h3>
-                    </div>
+                    <img src={mem.media} className="polaroid-img" />
+                    <div className="polaroid-caption">{mem.title}</div>
                   </div>
                 ))}
               </div>
@@ -1242,20 +1354,125 @@ function App() {
               initialData={editingMemory}
               albums={albums}
               preSelectedAlbumId={currentAlbum?.id}
+              t={t}
             />
           )}
 
           {view === "detail" && selectedMemory && (
-            <MemoryDetail
-              memory={selectedMemory}
-              onBack={() =>
-                setView(currentAlbum ? "album-detail" : "dashboard")
-              }
-              onEdit={(m) => {
-                setEditingMemory(m);
-                setView("create");
+            <div
+              className="fade-in"
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(255,255,255,0.95)",
+                zIndex: 200,
+                overflowY: "auto",
+                display: "flex",
+                justifyContent: "center",
               }}
-            />
+            >
+              <div
+                style={{ maxWidth: 900, width: "100%", padding: "4rem 2rem" }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: 20,
+                  }}
+                >
+                  <button
+                    onClick={() =>
+                      setView(
+                        currentAlbum
+                          ? "album-detail"
+                          : view === "favorites"
+                          ? "favorites"
+                          : "dashboard"
+                      )
+                    }
+                    className="btn-icon"
+                  >
+                    <ArrowLeft /> {t("btn_back")}
+                  </button>
+                  <button
+                    onClick={() =>
+                      setEditingMemory(selectedMemory) || setView("create")
+                    }
+                    className="btn-icon"
+                    style={{ color: "var(--primary)" }}
+                  >
+                    <Edit2 />
+                  </button>
+                </div>
+                <div
+                  className="polaroid-card"
+                  style={{
+                    cursor: "default",
+                    transform: "none",
+                    paddingBottom: 30,
+                  }}
+                >
+                  <div
+                    style={{
+                      maxHeight: "70vh",
+                      overflow: "hidden",
+                      marginBottom: 20,
+                      display: "flex",
+                      justifyContent: "center",
+                      background: "#000",
+                    }}
+                  >
+                    {selectedMemory.mediaType === "video" ? (
+                      <video
+                        src={selectedMemory.media}
+                        controls
+                        style={{ height: "100%", maxWidth: "100%" }}
+                      />
+                    ) : (
+                      <img
+                        src={selectedMemory.media}
+                        style={{ maxHeight: "70vh", objectFit: "contain" }}
+                      />
+                    )}
+                  </div>
+                  <h1
+                    style={{
+                      fontFamily: "Cinzel",
+                      fontSize: "2.5rem",
+                      textAlign: "center",
+                      margin: "10px 0",
+                    }}
+                  >
+                    {selectedMemory.title}
+                  </h1>
+                  <div
+                    style={{
+                      textAlign: "center",
+                      color: "#999",
+                      textTransform: "uppercase",
+                      letterSpacing: 1,
+                      marginBottom: 30,
+                    }}
+                  >
+                    {new Date(selectedMemory.date).toLocaleDateString()}{" "}
+                    {selectedMemory.location && ` • ${selectedMemory.location}`}
+                  </div>
+                  <p
+                    style={{
+                      fontFamily: "Lato",
+                      fontSize: "1.2rem",
+                      lineHeight: 1.8,
+                      maxWidth: 700,
+                      margin: "0 auto",
+                      textAlign: "justify",
+                    }}
+                  >
+                    {selectedMemory.story}
+                  </p>
+                </div>
+              </div>
+            </div>
           )}
         </>
       )}
