@@ -85,7 +85,7 @@ const TRANSLATIONS = {
     album_name_placeholder: "Nome do álbum",
     btn_create: "Criar",
     btn_home: "Início",
-    btn_add_here: "Add Aqui",
+    btn_add_here: "Adicionar",
     empty_album: "memórias",
     settings_appearance: "Aparência",
     settings_language: "Idioma",
