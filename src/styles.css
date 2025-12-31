@@ -1366,76 +1366,221 @@ body {
   background: var(--bg-glass);
 }
 
-/* --- VIEW: LINHA DO TEMPO (TIMELINE) --- */
-.timeline-container {
-  position: relative;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem 0;
-}
-/* Linha Central */
-.timeline-container::before {
-  content: '';
-  position: absolute;
-  top: 0; bottom: 0; left: 50%;
-  width: 2px;
-  background: var(--border-light);
-  transform: translateX(-50%);
-}
-.timeline-item {
+/* =========================================
+   📅 CALENDÁRIO VISUAL PREMIUM (ATUALIZADO)
+   ========================================= */
+
+/* Container de Controles (Filtros) */
+.calendar-header-controls.premium-controls {
   display: flex;
-  justify-content: flex-end;
-  padding-right: 50px;
-  position: relative;
-  margin-bottom: 3rem;
-  width: 50%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 15px 30px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(15px);
+  border-radius: 50px; /* Bem arredondado como uma pílula */
+  box-shadow: var(--shadow-premium);
+  border: var(--glass-border);
 }
-/* Alternância (Direita) */
-.timeline-item.right {
-  align-self: flex-end;
-  justify-content: flex-start;
-  padding-right: 0;
-  padding-left: 50px;
-  margin-left: 50%;
+
+.calendar-selects-wrapper {
+  display: flex;
+  gap: 15px;
+  align-items: center;
 }
-/* Bolinha da Timeline */
-.timeline-dot {
-  position: absolute;
-  top: 15px;
-  right: -8px;
-  width: 16px;
-  height: 16px;
-  background: var(--primary);
-  border: 3px solid var(--bg-body);
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px var(--primary);
-  z-index: 2;
-}
-.timeline-item.right .timeline-dot {
-  right: auto;
-  left: -8px;
-}
-/* Card da Timeline */
-.timeline-content {
-  background: var(--bg-body);
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 15px;
-  width: 100%;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+
+/* Selects Personalizados */
+.calendar-select {
+  appearance: none;
+  background: transparent;
+  border: none;
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
   cursor: pointer;
+  padding: 5px 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.calendar-select:hover {
+  background: rgba(var(--primary-rgb), 0.05);
+  transform: scale(1.05);
+}
+
+.calendar-select:focus {
+  outline: none;
+  background: rgba(var(--primary-rgb), 0.1);
+}
+
+/* Grid da Semana */
+.calendar-week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 15px;
+}
+
+.calendar-weekday {
+  text-align: center;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.7;
+}
+
+/* Grid Principal */
+.calendar-grid-wrapper {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 15px; /* Mais espaço entre dias */
+  padding-bottom: 2rem;
+}
+
+/* Box do Dia */
+.calendar-day-box {
+  aspect-ratio: 1/1;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.4); /* Fundo sutil para dias vazios */
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.calendar-day-box.empty {
+  background: transparent;
+}
+
+.calendar-day-box.has-memory {
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* Imagem de Fundo */
+.calendar-day-img {
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0.85; transition: 0.4s;
+  filter: saturate(0.8); /* Levemente desaturado para elegância */
+}
+
+.calendar-day-box:hover .calendar-day-img {
+  opacity: 1;
+  filter: saturate(1.1); /* Cor vibrante ao passar o mouse */
+  transform: scale(1.1);
+}
+
+/* Número do Dia */
+.calendar-day-number {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
   transition: 0.3s;
 }
-.timeline-content:hover {
-  transform: scale(1.02);
-  border-color: var(--primary);
-}
-.timeline-date {
-  font-size: 0.8rem;
+
+/* Número quando tem memória (Vai para o canto) */
+.calendar-day-number.active {
+  top: 10px; left: 10px;
+  transform: none;
+  background: rgba(255, 255, 255, 0.9);
   color: var(--primary);
+  font-weight: 800;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  width: 26px; height: 26px;
+  font-size: 0.8rem;
+}
+
+/* Badge +1 */
+.day-badge {
+  position: absolute;
+  bottom: 8px; right: 8px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.7rem;
   font-weight: 700;
-  margin-bottom: 5px;
-  display: block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* --- NOVO: ESTILOS DO MODAL DE LISTA DO DIA --- */
+.day-list-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.day-list-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: var(--bg-body);
+  border: 1px solid var(--border-light);
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.day-list-item:hover {
+  background: var(--bg-glass);
+  border-color: var(--primary);
+  transform: translateX(5px);
+}
+
+.day-list-img-wrapper {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.day-list-img-wrapper img, .day-list-img-wrapper video {
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+.day-list-info h4 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  color: var(--text-main);
+  margin: 0 0 5px 0;
+}
+
+.day-list-info span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .calendar-header-controls.premium-controls {
+    flex-direction: row;
+    padding: 10px;
+  }
+  .calendar-select { font-size: 1.1rem; }
+  .calendar-grid-wrapper { gap: 6px; }
+  .calendar-day-box { border-radius: 8px; }
+  .calendar-day-number.active { width: 20px; height: 20px; font-size: 0.7rem; top: 5px; left: 5px; }
 }
 
 /* --- VIEW: ESTATÍSTICAS (BI) --- */
